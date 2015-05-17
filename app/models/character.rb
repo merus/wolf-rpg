@@ -396,13 +396,13 @@ class Character < ActiveRecord::Base
 
 			self.abilities.each do |ability|
 				if ability.has_synergy?
-					if synergies[ability.synergy_name][:level] < synergies[ability.synergy_name][:spent]+2
-						bonus_remaining ? bonus_remaining = false : synergies['No Class'][:spent] += 3
+					if synergies[ability.synergy_name][:level] < synergies[ability.synergy_name][:spent]+1
+						bonus_remaining ? bonus_remaining = false : synergies['No Class'][:spent] += 2
 					else
-						synergies[ability.synergy_name][:spent] += 2
+						synergies[ability.synergy_name][:spent] += 1
 					end
 				else
-					synergies['No Class'][:spent] += 2
+					synergies['No Class'][:spent] += 1
 				end
 			end
 
@@ -417,7 +417,7 @@ class Character < ActiveRecord::Base
 
 			if synergies['No Class'][:remaining] < 0 and bonus_remaining
 				bonus_remaining = false
-				synergies['No Class'][:remaining] += 2
+				synergies['No Class'][:remaining] += 1
 			end
 
 			@synergy_bonus = bonus_remaining

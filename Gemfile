@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.9'
 gem 'bootstrap-sass'
 gem 'bcrypt-ruby', '3.0.1'
-gem 'libxml-ruby', '2.3.2'
+gem 'libxml-ruby', '2.8.0'
 gem 'will_paginate', '3.0.3'
 gem 'bootstrap-will_paginate', '0.0.6'
 
@@ -29,5 +29,5 @@ group :test do
 end
 
 group :production do
-	gem 'pg', '0.12.2'
+	gem 'pg', '0.18.2'
 end
