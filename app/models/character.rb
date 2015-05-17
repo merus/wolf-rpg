@@ -391,7 +391,7 @@ class Character < ActiveRecord::Base
 
 			synergies.each do |synergy_name, synergy|
 				synergy[:raw] = synergy[:level]
-				synergy[:level] /= (race == 'Goblin') ? 6 : 10
+				synergy[:level] /= (race == 'Goblin') ? 6 : 8
 			end
 
 			self.abilities.each do |ability|
