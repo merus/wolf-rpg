@@ -18,7 +18,7 @@ module SessionsHelper
 	end
 
 	def current_user
-		@current_user ||= User.find(session[:current_user_id]) unless session[:current_user_id].nil?
+        @current_user ||= User.find(session[:current_user_id]) unless session[:current_user_id].nil?
 	end
 
 	def signed_in?

@@ -87,9 +87,9 @@ $(document).ready(function() {
 	skill_levels_run = 0
 });
 
-function roll(value, type)
+function roll(value, type, keep)
 {
-	var result = 0, result_type;
+	var result = 0, results = [], result_type;
 	while (type < 4)
 	{
 		value -= 2;
@@ -100,29 +100,47 @@ function roll(value, type)
 		value += 2;
 		type -= 2;
 	}
-
+    
+    // Roll multiple times. If keep not defined then keep all results. Otherwise keep best.
 	for (var i=0; i<value; i+=1)
-		if (0) // First roll type is >=4; second is >=4 is 1, >=8 is 2, >=12 is 3
-		{
-			if (Math.random()*type >= 3)
-				result += 1;
-		}
-		else
-			result += Math.floor((Math.random()*type+1)/4);
+    {
+        var thisRoll = Math.floor((Math.random()*type+1)/4);
+        
+        if (typeof(keep) === 'undefined')
+        {
+            result += thisRoll;
+        }
+        else
+        {
+            results.push(thisRoll);
+        }
+    }
+    
+    // This finds the best 'keep' results
+    if (typeof(keep) !== 'undefined')
+    {
+        results.sort(function(a, b){return a-b});
+        
+        for (var i = 0; i < keep && i < results.length; i+=1)
+        {
+            result += results[i];
+        }
+    }
 
+    // Find the overall result.
 	if (result <= 0)
 		alert("Result: " + result + ' (Critical Failure: 0)');
-	else if (result <= 2)
+	else if (result <= 1)
 		alert("Result: " + result + ' (Failure: 1)');
-	else if (result <= 5)
+	else if (result <= 3)
 		alert("Result: " + result + ' (Basic Pass: 2)');
-	else if (result <= 10)
+	else if (result <= 6)
 		alert("Result: " + result + ' (Pass: 3)');
-	else if (result <= 17)
+	else if (result <= 10)
 		alert("Result: " + result + ' (Skillful Pass: 4)');
-	else if (result <= 26)
+	else if (result <= 15)
 		alert("Result: " + result + ' (Prodigious Pass: 5)');
-	else if (result <= 37)
+	else if (result <= 20)
 		alert("Result: " + result + ' (Epic Pass: 6)');
 	else
 		alert("Result: " + result + ' (Godlike Pass: 7)');

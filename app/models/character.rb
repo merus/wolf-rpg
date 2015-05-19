@@ -36,11 +36,30 @@ class Character < ActiveRecord::Base
 	NIL_STATS = [[0,0,0,0]]
 
 	BASE_STATS = {
-		'Wolf' => WOLF_STATS,
-		'Dwarf' => DWARF_STATS,
-		'Goblin' => GOBLIN_STATS,
-		'Vampire' => VAMPIRE_STATS,
+		'Wolf'      => WOLF_STATS,
+		'Dwarf'     => DWARF_STATS,
+		'Goblin'    => GOBLIN_STATS,
+		'Vampire'   => VAMPIRE_STATS,
 	}
+    
+    # The number of levels required to gain one synergy point
+    LEVELS_PER_SYNERGY = {
+        'Wolf'      => 8,
+        'Dwarf'     => 8,
+        'Goblin'    => 6,
+        'Vampire'   => 8,
+    }
+    
+    # If this is true then each synergy point adds to its skills. If false it does not.
+    SYNERGY_ADDS_TO_SKILLS = false
+    
+    # The number of dice kept when rolling if the character has no synergy points in the skill. Comment out to keep all dice.
+    KEEP_DICE_BASE = 3
+    
+    # Bonuses for following gods
+    SKILL_BONUS_FOR_FOLLOWING_OTHERS = 1
+    SKILL_BONUS_FOR_FOLLOWING_TRAVAER = 1
+    SKILL_PENALTY_FOR_FOLLOWING_GODS = 0 # Can be -1 ...
 
 	validates :name, presence: true, length: { maximum: 100 }
 	validates :race, presence: true, inclusion: BASE_STATS.keys
@@ -391,12 +410,12 @@ class Character < ActiveRecord::Base
 
 			synergies.each do |synergy_name, synergy|
 				synergy[:raw] = synergy[:level]
-				synergy[:level] /= (race == 'Goblin') ? 6 : 8
+                synergy[:level] /= LEVELS_PER_SYNERGY[self.race]
 			end
 
 			self.abilities.each do |ability|
 				if ability.has_synergy?
-					if synergies[ability.synergy_name][:level] < synergies[ability.synergy_name][:spent]+1
+					if synergies[ability.synergy_name][:level] < synergies[ability.synergy_name][:spent] + 1
 						bonus_remaining ? bonus_remaining = false : synergies['No Class'][:spent] += 2
 					else
 						synergies[ability.synergy_name][:spent] += 1
@@ -452,14 +471,19 @@ class Character < ActiveRecord::Base
 
 		total = effect_xml.attributes['add'].to_i
 		effect_xml.find('skill').each { |skill_xml| total += self.skill(skill_xml.content).level if self.has_skill? skill_xml.content }
-		total += self.synergies[skill.synergy_name][:level] if skill.has_synergy? and self.has_synergy? skill.synergy_name
+        total += self.synergies[skill.synergy_name][:level] if SYNERGY_ADDS_TO_SKILLS and skill.has_synergy? and self.has_synergy? skill.synergy_name
+        
+        if defined? KEEP_DICE_BASE
+            keep_dice = KEEP_DICE_BASE
+            keep_dice += self.synergies[skills.synergy_name][:level] if skill.has_synergy? and self.has_synergy? skill.synergy_name
+        end
 
 		if skill.spell and self.follower?
 			god = self.follower_of
 			if god == "Travaer"
-				total += (skill.invertible?) ? 1 : -1
+				total += (skill.invertible?) ? SKILL_BONUS_FOR_FOLLOWING_TRAVAER : SKILL_PENALTY_FOR_FOLLOWING_GODS
 			else
-				total += (skill.spell == god) ? 2 : -1
+				total += (skill.spell == god) ? SKILL_BONUS_FOR_FOLLOWING_OTHERS : SKILL_PENALTY_FOR_FOLLOWING_GODS
 			end
 		end
 		total += self.weapon_bonus if effect_xml.attributes['weapon']
@@ -482,8 +506,13 @@ class Character < ActiveRecord::Base
 
 		dice_type += 2 * effect_xml.attributes['die'].to_i # if no 'die' attribute then result becomes nil.to_i == 0
 
-		return [total.to_i, dice_type] if raw
-		return "<span onClick='roll(#{total.to_i}, #{dice_type})'>#{total.to_i}d#{dice_type}</span>".html_safe
+        if defined? KEEP_DICE_BASE
+            return [total.to_i, dice_type, keep_dice] if raw
+            return "<span onClick='roll(#{total.to_i}, #{dice_type}, #{keep_dice})'>#{total.to_i}d#{dice_type}k#{keep_dice}</span>".html_safe
+        else
+            return [total.to_i, dice_type] if raw
+            return "<span onClick='roll(#{total.to_i}, #{dice_type})'>#{total.to_i}d#{dice_type}</span>".html_safe
+        end
 	end
 
 	def power(skill, effect, raw=false)
