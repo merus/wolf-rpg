@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120704094032) do
+ActiveRecord::Schema.define(:version => 20150519091623) do
 
   create_table "abilities", :force => true do |t|
     t.integer  "character_id"
@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(:version => 20120704094032) do
     t.integer  "user_id"
     t.integer  "campaign_id"
     t.integer  "privacy"
+    t.integer  "synergy_hp"
   end
 
   create_table "equipment", :force => true do |t|

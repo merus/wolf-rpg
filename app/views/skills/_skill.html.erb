@@ -47,6 +47,7 @@
 		</div>
 		<div class='right'>
 			<%= "Synergy: #{skill.synergy_name}" if skill.has_synergy? %>
+            <%= "(#{skill.sub_synergy})" if skill.has_sub_synergy? %>
 		</div>
 	</div>
 <% end %>

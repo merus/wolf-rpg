@@ -6,10 +6,10 @@
 		</div>
 		<div class="modal-body">
 
-			<%= label_tag :base_stats, 'Base Stats' %>
+			<%= label_tag :base_stats, 'Base Stats Type' %>
 			<%= select_tag :base_stats, options_for_select(@character.stats_options, @character.stats_selected) %>
 
-			Base Stats:
+			Base Stats Distribution:
 			<% @character.stats_options.each_with_index do |stat, index| %>
 				<%= select_tag :"raw_stats#{index}", options_for_select(@character.stats_options(index), @character.stats_selected(index)) %>
 			<% end %>

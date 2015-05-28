@@ -25,6 +25,7 @@ Wolf::Application.routes.draw do
       put :items
       put :skills
       put :abilities
+      put :synergy_stats
     end
 
     collection do

@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="Skills">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Skill" type="Skill" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="Skill">
+        <xs:sequence>
+
+            <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="2"/>
+
+            <xs:element name="Require" type="xs:string" minOccurs="0"/>
+
+            <xs:element name="Invert" minOccurs="0">
+                <xs:complexType/>
+            </xs:element>
+
+            <xs:element name="Divide" minOccurs="0">
+                <xs:complexType/>
+            </xs:element>
+
+            <xs:element name="Stat" type="StatType"/>
+
+            <xs:element name="Cost">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="Spell" type="SpellType" minOccurs="0"/>
+
+            <xs:element name="Synergy" type="SynergyType" minOccurs="0" maxOccurs="2"/>
+
+            <xs:element name="Text" type="TextType"/>
+
+            <xs:element name="Effect" type="EffectType" maxOccurs="unbounded"/>
+
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="StatType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Str"/>
+            <xs:enumeration value="Dex"/>
+            <xs:enumeration value="Int"/>
+            <xs:enumeration value="Fai"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="SpellType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Arthur"/>
+            <xs:enumeration value="Ird'ken"/>
+            <xs:enumeration value="Oxdoro"/>
+            <xs:enumeration value="Loreanna"/>
+            <xs:enumeration value="Innodi"/>
+            <xs:enumeration value="Travaer"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="SynergyType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Warrior"/>
+            <xs:enumeration value="Rogue"/>
+            <xs:enumeration value="Channeller"/>
+            <xs:enumeration value="Mechanist"/>
+            <xs:enumeration value="Trickster"/>
+            <xs:enumeration value="Battle Mage"/>
+            <xs:enumeration value="Necromancer"/>
+            <xs:enumeration value="Lore"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="TextType" mixed="true">
+        <xs:sequence>
+            <xs:any/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="EffectType">
+        <xs:sequence>
+            <xs:element name="Action" type="ActionType" minOccurs="0"/>
+            <xs:element name="Mana" type="ManaType" minOccurs="0"/>
+            <xs:element name="Power" type="PowerType"/>
+            <xs:element name="Quick" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="ActionType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Attack"/>
+            <xs:enumeration value="Defend"/>
+            <xs:enumeration value="Major"/>
+            <xs:enumeration value="Minor"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ManaType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9X](,[1-9X])?"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="PowerType">
+        <xs:sequence>
+            <xs:element name="skill" type="xs:string" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="type" type="xs:string"/>
+        <xs:attribute name="times" type="xs:integer"/>
+        <xs:attribute name="add" type="xs:integer"/>
+    </xs:complexType>
+
+</xs:schema>

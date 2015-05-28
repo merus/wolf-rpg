@@ -29,6 +29,7 @@
 	<%= render 'characters/remove_ability_modal' %>
 	<%= render 'characters/add_modal' %>
 	<%= render 'characters/add_ability_modal' %>
+    <%= render 'characters/synergy_stats_modal' %>
 <% end %>
 
 <!-- Error and Warning Messages -->
@@ -166,6 +167,24 @@
 							<td><%= synergy[:remaining] %><%= " Total" if synergy_name == 'No Class' %></td>
 						</tr>
 					<% end %>
+                    <tr class="dont-print rule-above">
+                        <td>Stat Bonus</td>
+                        <td class="hp">+<%= @character.synergy_stats[:hp] %> HP</td>
+                        <td class="mp">+<%= @character.synergy_stats[:mp] %> MP</td>
+                        <td><a class="btn btn-mini btn-primary disable-button" data-toggle="modal" href='#synergyStatsModal'><%= modify %></a></td>
+                    </tr>
+<!--                    <tr class = "hp dont-print">
+                        <td>HP Bonus</td><td>+<%= @character.synergy_stats[:hp] %></td>
+                        <td/><td/>
+                    </tr>
+                    <tr class = "mp dont-print">
+                        <td>MP Bonus</td>
+                        <td>+<%= @character.synergy_stats[:mp] %></td>
+                        <td/>
+                        <td>
+                            <a class="btn btn-mini btn-primary disable-button" data-toggle="modal" href='#synergyStatsModal'><%= modify %></a>
+                        </td>
+                    </tr> !-->
 				</tbody>
 			</table>
 		</div>
