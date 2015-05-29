@@ -2,6 +2,26 @@
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
+    <xs:simpleType name="EmptyType">
+        <xs:restriction base="xs:string">
+            <xs:length value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="IntOrEmptyType">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:length value="0"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:integer"/>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+
+
     <xs:element name="Skills">
         <xs:complexType>
             <xs:sequence>
@@ -17,15 +37,11 @@
 
             <xs:element name="Require" type="xs:string" minOccurs="0"/>
 
-            <xs:element name="Invert" minOccurs="0">
-                <xs:complexType/>
-            </xs:element>
+            <xs:element name="Invert" minOccurs="0" type="EmptyType"/>
 
-            <xs:element name="Divide" minOccurs="0">
-                <xs:complexType/>
-            </xs:element>
+            <xs:element name="Divide" minOccurs="0" type="EmptyType"/>
 
-            <xs:element name="Stat" type="StatType"/>
+            <xs:element name="Stat" type="StatType" minOccurs="0"/>
 
             <xs:element name="Cost">
                 <xs:simpleType>
@@ -54,6 +70,15 @@
             <xs:enumeration value="Fai"/>
         </xs:restriction>
     </xs:simpleType>
+    
+    <xs:simpleType name="statType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="str"/>
+            <xs:enumeration value="dex"/>
+            <xs:enumeration value="int"/>
+            <xs:enumeration value="fai"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:simpleType name="SpellType">
         <xs:restriction base="xs:string">
@@ -78,23 +103,56 @@
             <xs:enumeration value="Lore"/>
         </xs:restriction>
     </xs:simpleType>
-
+    
     <xs:complexType name="TextType" mixed="true">
-        <xs:sequence>
-            <xs:any/>
-        </xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="XP" type="EmptyType"/>
+            <xs:element name="HP" type="IntOrEmptyType"/>
+            <xs:element name="MP" type="IntOrEmptyType"/>
+            <xs:element name="HPMax" type="EmptyType"/>
+            <xs:element name="MPMax" type="EmptyType"/>
+            <xs:element name="Str" type="EmptyType"/>
+            <xs:element name="Dex" type="EmptyType"/>
+            <xs:element name="Int" type="EmptyType"/>
+            <xs:element name="Fai" type="EmptyType"/>
+            <xs:element name="name"/>
+            <xs:element name="check">
+                <xs:complexType mixed="true">
+                    <xs:choice minOccurs="0">
+                        <xs:element name="times" type="EmptyType"/>
+                    </xs:choice>
+                    <xs:attribute name="type" type="statType"/>
+                    <xs:attribute name="penalty" type="xs:integer"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
     </xs:complexType>
 
 
     <xs:complexType name="EffectType">
         <xs:sequence>
-            <xs:element name="Action" type="ActionType" minOccurs="0"/>
+            <xs:element name="Action" minOccurs="0">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="ActionType">
+                            <xs:attribute name="type">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="melee"/>
+                                        <xs:enumeration value="ranged"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="Mana" type="ManaType" minOccurs="0"/>
             <xs:element name="Power" type="PowerType"/>
             <xs:element name="Quick" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-
+    
     <xs:simpleType name="ActionType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="Attack"/>
@@ -106,17 +164,20 @@
 
     <xs:simpleType name="ManaType">
         <xs:restriction base="xs:string">
-            <xs:pattern value="[0-9X](,[1-9X])?"/>
+            <xs:pattern value="([0-9]+|(X(\+[0-9]+))?)(,([0-9]+|X))?"/>
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="PowerType">
+    <xs:complexType name="PowerType" mixed="true">
         <xs:sequence>
-            <xs:element name="skill" type="xs:string" maxOccurs="unbounded"/>
+            <xs:element name="skill" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="type" type="xs:string"/>
-        <xs:attribute name="times" type="xs:integer"/>
+        <xs:attribute name="times" type="xs:decimal"/>
         <xs:attribute name="add" type="xs:integer"/>
+        <xs:attribute name="die" type="xs:integer"/>
+        <xs:attribute name="weapon" type="xs:positiveInteger"/>
+        <xs:attribute name="stat" type="StatType"/>
     </xs:complexType>
 
 </xs:schema>

@@ -42,8 +42,8 @@
         <Name>Ball Lightning</Name>
         <Require>Lightning Bolt</Require>
         <Stat>Fai</Stat>
-        <Spell>Arthur</Spell>
         <Cost>1</Cost>
+        <Spell>Arthur</Spell>
         <Synergy>Battle Mage</Synergy>
         <Text>
             By calling on the power of <name>Arthur</name> the character is able to summon a ball of pure lightning to attack their foes.
@@ -84,8 +84,8 @@
         <Name>Black Hole</Name>
         <Require>Portal</Require>
         <Stat>Fai</Stat>
-        <Spell>Oxdoro</Spell>
         <Cost>5</Cost>
+        <Spell>Oxdoro</Spell>
         <Synergy>Mechanist</Synergy>
         <Text>
             By calling on the power of <name>Oxdoro</name> the character is able to bend space in on itself creating a point in space that sucks everything towards it and crushes those inside.
@@ -107,8 +107,8 @@
         <Invert/>
         <Divide/>
         <Stat>Fai</Stat>
-        <Spell>Loreanna</Spell>
         <Cost>3</Cost>
+        <Spell>Loreanna</Spell>
         <Synergy>Trickster</Synergy>
         <Text>
             Calling on the power of <name>Loreanna</name> fortune favours someone in all they do.
@@ -126,8 +126,8 @@
         <Name>Blink</Name>
         <Require>Dodge</Require>
         <Stat>Dex</Stat>
-        <Spell>Oxdoro</Spell>
         <Cost>3</Cost>
+        <Spell>Oxdoro</Spell>
         <Synergy>Mechanist</Synergy>
         <Synergy>Rogue</Synergy>
         <Text>
@@ -777,8 +777,8 @@
     <Skill>
         <Name>Increase Stat</Name>
         <Name>Reduce Stat</Name>
-        <Divide/>
         <Invert/>
+        <Divide/>
         <Stat>Fai</Stat>
         <Cost>5</Cost>
         <Spell>Loreanna</Spell>
@@ -1050,10 +1050,10 @@
         <Text>
             By calling the power of <name>Oxdoro</name> the character can take temporary energies and make them permanent.
             The power of this skill is <check type="fai">Permanence</check>. If the power of this skill is at least the power of a spell with ongoing mana costs the spell no longer requires the ongoing cost. However the caster of the ongoing spell reduces their <MPMax/> by twice the ongoing cost. If the skill required a <name>Major Action</name> to sustain it now requires a <name>Minor Action</name>. If the skill required a <name>Minor Action</name> to sustain it now requires no action to sustain.
-        </Text>t
+        </Text>
         <Effect>
-            <Power type="roll"><skill>Permanence</skill></Power>
             <Mana>5</Mana>
+            <Power type="roll"><skill>Permanence</skill></Power>
             <Quick>If X is at least the power of a spell, the caster gets -2X to max MP but pays no more MP.</Quick>
         </Effect>
     </Skill>
@@ -1070,8 +1070,8 @@
         </Text>
         <Effect>
             <Action>Major</Action>
-            <Power type="roll"><skill>Phase Shift</skill></Power>
             <Mana>5,2</Mana>
+            <Power type="roll"><skill>Phase Shift</skill></Power>
             <Quick>Become Ethereal.</Quick>
         </Effect>
     </Skill>
@@ -1446,7 +1446,7 @@
             <Action>Major</Action>
             <Mana>5,X</Mana>
             <Power type="roll"><skill>Swarm of Rats</skill></Power>
-            <Quick>Summon X rats. Each rat has <HP>1</HP> and attacks for 2 damages ignoring shields.</Quick>
+            <Quick>Summon X rats. Each rat has 1 HP and attacks for 2 damages ignoring shields.</Quick>
         </Effect>
     </Skill>
     
@@ -1628,7 +1628,7 @@
         <Synergy>Channeller</Synergy>
         <Text>
             As a devout follower of <name>Ird'ken</name> the caster is able to draw extreme divine power from <name>Ird'ken</name> to cause chaos or order.
-            The power of this skill is <check type-="fai">Follower of Ird'ken</check>. The duration of this skill is the result duration. Whenever each nearby character in the effect performs a <name>Major Action</name> they instead pick the result level number of skills. The caster then chooses which skill the target actually performs. The target still chooses the specifics of the skill they use such as targets. If the target does not have sufficient skills that have <name>Major Action</name>s then they pick as many skills as they can.
+            The power of this skill is <check type="fai">Follower of Ird'ken</check>. The duration of this skill is the result duration. Whenever each nearby character in the effect performs a <name>Major Action</name> they instead pick the result level number of skills. The caster then chooses which skill the target actually performs. The target still chooses the specifics of the skill they use such as targets. If the target does not have sufficient skills that have <name>Major Action</name>s then they pick as many skills as they can.
             This skill is unaffected by <name>Counter-spell</name>, <name>Spell Shield</name>, <name>Inversion</name>, <name>Steal Spell</name> and <name>Void</name>. Casting requires a <name>Major Action</name>.
         </Text>
         <Effect>
