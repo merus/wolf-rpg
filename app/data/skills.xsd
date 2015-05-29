@@ -2,6 +2,23 @@
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
+    <xs:element name="Skills">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Skill" type="SkillType" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="Abilities">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Ability" type="AbilityType" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
     <xs:simpleType name="EmptyType">
         <xs:restriction base="xs:string">
             <xs:length value="0"/>
@@ -21,21 +38,12 @@
         </xs:union>
     </xs:simpleType>
 
-
-    <xs:element name="Skills">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="Skill" type="Skill" maxOccurs="unbounded"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-
-    <xs:complexType name="Skill">
+    <xs:complexType name="SkillType">
         <xs:sequence>
 
             <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="2"/>
-
-            <xs:element name="Require" type="xs:string" minOccurs="0"/>
+            
+            <xs:element name="Require" type="RequireType" minOccurs="0"/>
 
             <xs:element name="Invert" minOccurs="0" type="EmptyType"/>
 
@@ -61,6 +69,54 @@
 
         </xs:sequence>
     </xs:complexType>
+    
+    <xs:complexType name="AbilityType">
+        <xs:sequence>
+            
+            <xs:element name="Name" type="xs:string"/>
+            
+            <xs:element name="Synergy" type="SynergyType" minOccurs="0"/>
+            
+            <xs:element name="Require" type="RequireType" minOccurs="0"/>
+            
+            <xs:element name="Text" type="TextType"/>
+            
+            <xs:element name="Quick" type="xs:string"/>
+            
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="RequireType" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="XP">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="type">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="Spell"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Ability" type="xs:string"/>
+            <xs:element name="Race">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="Wolf"/>
+                        <xs:enumeration value="Dwarf"/>
+                        <xs:enumeration value="Goblin"/>
+                        <xs:enumeration value="Vampire"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+    
 
     <xs:simpleType name="StatType">
         <xs:restriction base="xs:string">
@@ -107,8 +163,8 @@
     <xs:complexType name="TextType" mixed="true">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element name="XP" type="EmptyType"/>
-            <xs:element name="HP" type="IntOrEmptyType"/>
-            <xs:element name="MP" type="IntOrEmptyType"/>
+            <xs:element name="HP" type="PointType"/>
+            <xs:element name="MP" type="PointType"/>
             <xs:element name="HPMax" type="EmptyType"/>
             <xs:element name="MPMax" type="EmptyType"/>
             <xs:element name="Str" type="EmptyType"/>
@@ -165,6 +221,12 @@
     <xs:simpleType name="ManaType">
         <xs:restriction base="xs:string">
             <xs:pattern value="([0-9]+|(X(\+[0-9]+))?)(,([0-9]+|X))?"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="PointType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]*|X"/>
         </xs:restriction>
     </xs:simpleType>
 

@@ -278,8 +278,8 @@
 
     <Ability>
     	<Name>Oracle</Name>
+        <Synergy>Trickster</Synergy>
     	<Require><Ability>Follower of Loreanna</Ability></Require>
-    	<Synergy>Trickster</Synergy>
     	<Text>
     		By calling on the power of Loreanna an <name>Oracle</name> may read the destiny of a character with a <check type="fai">Sense</check>.
     	</Text>
