@@ -404,9 +404,7 @@ class Character < ActiveRecord::Base
 	end
 
     def synergy_stats
-        puts "stats start"
         if @synergy_stats.nil?
-            puts "stats nil"
             @synergy_stats = {hp_min: 0, mp_min: 0, wild: 0, hp: 0, mp: 0}
             # Calculate min hp, min mp and wild.
             self.synergies.each do |name, synergy|
@@ -516,11 +514,6 @@ class Character < ActiveRecord::Base
             keep_dice = KEEP_DICE_BASE
             keep_dice += self.synergies[skill.synergy_name][:level] if skill.has_synergy? and self.has_synergy? skill.synergy_name
             keep_dice += self.synergies[skill.sub_synergy][:level] if skill.has_sub_synergy? and self.has_synergy? skill.sub_synergy
-            
-            puts "****************"
-            p skill.name
-            p skill.synergy_name if skill.has_synergy?
-            p skill.sub_synergy if skill.has_sub_synergy?
         end
 
 		if skill.spell and self.follower?
