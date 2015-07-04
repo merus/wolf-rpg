@@ -824,11 +824,11 @@
         <Synergy>Rogue</Synergy>
         <Text>
             Ever ready for action the character anticipates the actions of others.
-            This skill is used at the start of combat. The power is <check type="int">Initiative+1</check>. The turn order of characters is determined by the highest power of this skill. If there is a tie then then the characters that tied reroll to see who goes first amongst themselves.
+            This skill is used at the start of combat. Make a <check type="int">Observation</check> or <check type="dex">Sprint</check> and add the level of this skill to the result. The turn order of characters is determined by the highest result of this check. If there is a tie then player character start before non-player characters.
         </Text>
         <Effect>
-            <Power type="roll" add="1"><skill>Initiative</skill></Power>
-            <Quick>Roll for X at start of combat. Turn order is descending X.</Quick>
+            <Power><skill>Initiative</skill></Power>
+            <Quick>Add X to Sprint or Observation to determine turn order.</Quick>
         </Effect>
     </Skill>
     

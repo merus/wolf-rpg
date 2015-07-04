@@ -280,12 +280,7 @@ class Skill < ActiveRecord::Base
                     if skill[:synergy].nil?
                         skill[:synergy] = synergy.content
                     else
-                        puts "#############"
-                        puts "sub synergy: "
-                        p skill[:name]
-                        p synergy.content
                         skill[:sub_synergy] = synergy.content
-                        p skill[:sub_synergy]
                     end
                 end
 
