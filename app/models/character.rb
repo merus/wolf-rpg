@@ -427,9 +427,6 @@ class Character < ActiveRecord::Base
             # Calculate actual bonus hp and mp
             @synergy_stats[:hp] = self.synergy_hp
             @synergy_stats[:mp] = @synergy_stats[:hp_min] + @synergy_stats[:mp_min] + @synergy_stats[:wild] - @synergy_stats[:hp]
-            
-            p @synergy_stats[:hp]
-            p @synergy_stats[:mp]
         end
         @synergy_stats
     end
@@ -512,8 +509,14 @@ class Character < ActiveRecord::Base
         
         if defined? KEEP_DICE_BASE
             keep_dice = KEEP_DICE_BASE
-            keep_dice += self.synergies[skill.synergy_name][:level] if skill.has_synergy? and self.has_synergy? skill.synergy_name
-            keep_dice += self.synergies[skill.sub_synergy][:level] if skill.has_sub_synergy? and self.has_synergy? skill.sub_synergy
+            if not self.synergies.empty?
+                if skill.has_synergy?
+                    keep_dice += self.synergies[skill.synergy_name][:level] if self.has_synergy? skill.synergy_name
+                    keep_dice += self.synergies[skill.sub_synergy][:level] if skill.has_sub_synergy? and self.has_synergy? skill.sub_synergy
+                else
+                    keep_dice += self.synergies.values.map { |synergy| synergy[:level] }.max
+                end
+            end
         end
 
 		if skill.spell and self.follower?
