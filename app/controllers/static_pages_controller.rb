@@ -28,4 +28,7 @@ class StaticPagesController < ApplicationController
 
   def monster
   end
+
+  def contact
+  end
 end
