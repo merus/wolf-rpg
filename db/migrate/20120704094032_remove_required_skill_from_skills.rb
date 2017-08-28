@@ -1,4 +1,4 @@
-class RemoveRequiredSkillFromSkills < ActiveRecord::Migration
+class RemoveRequiredSkillFromSkills < ActiveRecord::Migration[4.2][3.2]
   def up
     remove_column :skills, :required_skill
       end

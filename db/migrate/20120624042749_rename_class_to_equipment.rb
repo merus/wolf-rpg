@@ -1,4 +1,4 @@
-class RenameClassToEquipment < ActiveRecord::Migration
+class RenameClassToEquipment < ActiveRecord::Migration[4.2]
 	def up
 		remove_column :equipment, :class
 		add_column :equipment, :weapon_class, :string

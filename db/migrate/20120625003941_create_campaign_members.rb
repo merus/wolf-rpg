@@ -1,4 +1,4 @@
-class CreateCampaignMembers < ActiveRecord::Migration
+class CreateCampaignMembers < ActiveRecord::Migration[4.2]
   def change
     create_table :campaign_members do |t|
       t.integer :campaign_id

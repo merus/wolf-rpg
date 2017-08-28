@@ -1,4 +1,4 @@
-class RemoveStatsFromCharacters < ActiveRecord::Migration
+class RemoveStatsFromCharacters < ActiveRecord::Migration[4.2]
   def up
     remove_column :characters, :str_mod
         remove_column :characters, :dex_mod

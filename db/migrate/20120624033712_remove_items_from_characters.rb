@@ -1,4 +1,4 @@
-class RemoveItemsFromCharacters < ActiveRecord::Migration
+class RemoveItemsFromCharacters < ActiveRecord::Migration[4.2]
   def up
     remove_column :characters, :items
       end

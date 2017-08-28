@@ -1,4 +1,4 @@
-class RemoveUsersAndAdminFromCampaigns < ActiveRecord::Migration
+class RemoveUsersAndAdminFromCampaigns < ActiveRecord::Migration[4.2]
   def up
     remove_column :campaigns, :users
         remove_column :campaigns, :admin_id

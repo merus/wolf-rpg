@@ -1,4 +1,4 @@
-class RemoveContentFromEquipment < ActiveRecord::Migration
+class RemoveContentFromEquipment < ActiveRecord::Migration[4.2]
   def up
     remove_column :equipment, :type
         remove_column :equipment, :str_req
