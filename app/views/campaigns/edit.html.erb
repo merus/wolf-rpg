@@ -12,8 +12,8 @@
 			<%= f.label :description %>
 			<%= f.text_area :description, rows: 5 %>
 
-			<%= f.label :is_public, "Public Campaign" %>
-			<%= f.check_box :is_public %>
+			<%= f.label :visibility, "Visibility" %>
+			<%= f.select(:visibility, [['Open', :open], ['Closed', :closed]], selected: @campaign.visibility) %>
 
 			<%= f.submit "Save Changes", class: "btn btn-large btn-primary" %>
 
