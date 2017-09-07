@@ -8,7 +8,6 @@ class CampaignsController < ApplicationController
 
 	def create
 		@campaign = Campaign.new(params[:campaign])
-		@campaign.visibility = :open
 		if @campaign.save
 			@campaign.add_member current_user, :admin
 			current_user.push_active_campaign(@campaign) if signed_in?
@@ -84,7 +83,7 @@ class CampaignsController < ApplicationController
 		user_ids ||= []
 
 		@user_campaigns = Campaign.where(id: user_ids).order('name').paginate(page: params[:user_page], per_page: 10) if signed_in?
-		@open_campaigns = Campaign.where('visibility = ? AND id NOT IN (?)', Campaign.visibility(:open), user_ids).order('name').paginate(page: params[:open_page], per_page: 10)
+		@open_campaigns = Campaign.where(is_public: true).where.not(id: user_ids).order('name').paginate(page: params[:open_page], per_page: 10)
 	end
 
 	def join

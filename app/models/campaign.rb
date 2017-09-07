@@ -11,21 +11,14 @@
 #
 
 class Campaign < ActiveRecord::Base
-	attr_accessible :name, :description, :visibility
+	attr_accessible :name, :description, :is_public
 	has_many :characters
 	has_many :campaign_members
 	has_many :users, through: :campaign_members
 	has_many :members, through: :campaign_members, source: :user, conditions: CampaignMember.member_sql
 	has_many :admins, through: :campaign_members, source: :user, conditions: CampaignMember.admin_sql
 
-	VISIBILITY = { :open => 1, :closed => 0 }
-
 	validates :name, presence: true
-	validates :visibility, inclusion: VISIBILITY.keys
-
-	def self.visibility(vis)
-		VISIBILITY[vis]
-	end
 
 	def add_member(member, membership_type=:member)
 		member_id = (member.is_a?(User) ? member.id : member.to_i)
@@ -57,16 +50,8 @@ class Campaign < ActiveRecord::Base
 		self.campaign_members.find_by_user_id(member_id) || self.campaign_members.build(user_id: member_id, membership: :none)
 	end
 
-	def visibility=(vis)
-		write_attribute :visibility, VISIBILITY[vis]
-	end
-
-	def visibility
-		VISIBILITY.invert[read_attribute :visibility]
-	end
-
 	def visible_to?(user)
-		return true if self.visibility == :open
+		return true if is_public
 
 		case user
 		when User then type = self.campaign_members.find_by_user_id(user.id)
@@ -75,9 +60,5 @@ class Campaign < ActiveRecord::Base
 		end
 
 		return (type and [:member, :admin, :invite].include? type.membership)
-	end
-
-	def open?
-		self.visibility == :open
 	end
 end
