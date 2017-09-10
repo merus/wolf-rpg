@@ -44,7 +44,7 @@ h1 {
 }
 
 .character-block {
-	padding-left: $gridColumnWidth/2;
+	padding-left: 2.0em;
 }
 
 .pagination {
@@ -318,7 +318,7 @@ table.table-combat tbody tr:first-child {
 
 .combat-expand {
 	@extend .btn;
-	@extend .btn-large;
+	@extend .btn-lg;
 	width: 250px;
 }
 
@@ -419,11 +419,6 @@ input, textarea, select, .uneditable-input {
 		margin: 0 0 18px 0;
 	}
 }
-
-.field_with_errors {
-  @extend .control-group;
-  @extend .error;
- }
 
  /* Hiding skill tags */
 
