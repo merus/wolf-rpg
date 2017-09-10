@@ -13,7 +13,6 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap
-//= require bootstrap-tooltip
 //= require_tree .
 
 $(document).ready(function() {
@@ -87,28 +86,32 @@ $(document).ready(function() {
 	skill_levels_run = 0
 });
 
-function roll(value, type)
+function roll(amount, faces, keep)
 {
 	var result = 0, result_type;
-	while (type < 4)
+	while (faces < 4)
 	{
-		value -= 2;
-		type += 2;
+		amount -= 2;
+		faces += 2;
 	}
-	while (type > 12)
+	while (amount > 12)
 	{
-		value += 2;
-		type -= 2;
+		amount += 2;
+		faces -= 2;
 	}
 
-	for (var i=0; i<value; i+=1)
-		if (0) // First roll type is >=4; second is >=4 is 1, >=8 is 2, >=12 is 3
-		{
-			if (Math.random()*type >= 3)
-				result += 1;
-		}
-		else
-			result += Math.floor((Math.random()*type+1)/4);
+	dice = []
+	for (var i = 0; i< amount; i++) {
+		dice[i] = Math.ceil(Math.random()*faces);
+	}
+
+	dice.sort.reverse;
+
+	for (var i = 0; (i < keep) && (i < amount); i++) {
+		result += Math.floor(dice[i] / 4);
+	}
+
+	alert(dice.toString())
 
 	if (result <= 0)
 		alert("Result: " + result + ' (Critical Failure: 0)');
