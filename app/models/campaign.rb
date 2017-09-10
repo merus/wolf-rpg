@@ -11,7 +11,6 @@
 #
 
 class Campaign < ActiveRecord::Base
-	attr_accessible :name, :description, :is_public
 	has_many :characters
 	has_many :campaign_members
 	has_many :users, through: :campaign_members

@@ -20,7 +20,6 @@ include ApplicationHelper
 include SessionsHelper
 
 class Character < ActiveRecord::Base
-	attr_accessible :dex, :fai, :int, :name, :race, :str, :user_id, :privacy, :campaign_id
 	has_many :skills, dependent: :delete_all, uniq: true, class_name: 'Skill'
 	has_many :abilities, dependent: :delete_all, uniq: true, class_name: 'Ability'
 	has_many :items, dependent: :delete_all, uniq: true, class_name: 'Equipment'

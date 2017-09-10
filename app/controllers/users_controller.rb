@@ -1,13 +1,15 @@
 class UsersController < ApplicationController
-	before_filter :signed_in_user, only: [:edit, :update, :password]
-	before_filter :correct_user, only: [:edit, :update, :password]
+	before_action :find_user, only: [:show, :edit, :update, :password]
+	before_action :signed_in_user, only: [:edit, :update, :password]
+	before_action :correct_user, only: [:edit, :update, :password]
+
 
 	def new
 		@user = User.new
 	end
 
 	def create
-		@user = User.new(params[:user])
+		@user = User.new(strong_parameters)
 		if @user.save
 			sign_in @user
 			redirect_to @user
@@ -17,10 +19,8 @@ class UsersController < ApplicationController
 	end
 
 	def show
-		@user = User.find(params[:id])
-
 		if @user == current_user
-			@invitations = CampaignMember.find_all_by_user_id_and_membership(@user.id, CampaignMember.membership(:invite))
+			@invitations = CampaignMember.find_by(user: @user.id, membership: CampaignMember.membership(:invite))
 			@campaigns_to_invite = []
 		else
 			@invitations = []
@@ -37,12 +37,9 @@ class UsersController < ApplicationController
 	end
 
 	def edit
-		@user = User.find(params[:id])
 	end
 
 	def password
-		@user = User.find(params[:id])
-
 		if @user and @user.authenticate(params[:user][:old_password])
 			@user.password = params[:user][:new_password]
 			@user.password_confirmation = params[:user][:new_password_confirmation]
@@ -60,13 +57,11 @@ class UsersController < ApplicationController
 	end
 
 	def update
-		@user = User.find(params[:id])
-
 		if @user and @user.authenticate(params[:user][:password])
 			# change user details
 			params[:user][:password_confirmation] = params[:user][:password]
 
-			if @user.update_attributes(params[:user])
+			if @user.update_attributes(strong_parameters)
 				redirect_to @user, flash: { success: "Updated Details" }
 			else
 				flash.now[:error] = "Error: #{@user.errors.full_messages.join(', ')}"
@@ -80,12 +75,19 @@ class UsersController < ApplicationController
 
 	private
 
+	def find_user
+		@user = User.find(params[:id])
+	end
+
+	def strong_parameters
+		params.require(:user).permit(:email, :handle, :name, :password, :password_confirmation)
+	end
+
 	def signed_in_user
 		redirect_to signin_path, notice: 'Please Sign In' unless signed_in?
 	end
 
 	def correct_user
-		@user = User.find(params[:id])
 		redirect_to @user, flash: { error: 'You may only edit your own profile' } unless @user == current_user
 	end
 end

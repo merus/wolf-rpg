@@ -11,7 +11,6 @@
 #
 
 class CampaignMember < ActiveRecord::Base
-	attr_accessible :campaign_id, :user_id, :membership
 	belongs_to :user
 	belongs_to :campaign
 

@@ -1,13 +1,16 @@
 class CampaignsController < ApplicationController
-	before_filter :signed_in_user, except: [:show, :index]
-	before_filter :correct_user, except: [:show, :index, :new, :create, :join]
+	before_action :find_campaign, only: [:show, :combat, :order, :join, :invite, :deny, :clear, :admin, :edit, :update, :destroy]
+	before_action :find_user, only: [:invite, :deny, :clear, :admin]
+	before_action :signed_in_user, except: [:show, :index]
+	before_action :correct_user, except: [:show, :index, :new, :create, :join]
+	before_action :find_campaign, only:
 
 	def new
 		@campaign = Campaign.new
 	end
 
 	def create
-		@campaign = Campaign.new(params[:campaign])
+		@campaign = Campaign.new(strong_parameters)
 		if @campaign.save
 			@campaign.add_member current_user, :admin
 			current_user.push_active_campaign(@campaign) if signed_in?
@@ -18,7 +21,6 @@ class CampaignsController < ApplicationController
 	end
 
 	def show
-		@campaign = Campaign.find(params[:id])
 
 		if @campaign.visible_to? current_user
 			current_user.push_active_campaign(@campaign) if signed_in?
@@ -29,15 +31,13 @@ class CampaignsController < ApplicationController
 	end
 
 	def combat
-		@campaign = Campaign.find(params[:id])
 		@characters = @campaign.characters.select { |character| character.visible_to? current_user }.sort_by &:name
 	end
 
 	def order
-		@campaign = Campaign.find(params[:id])
 		@character_list = []
 		params.select { |param, value| param[0..9] == 'character_'}.each do |param, character_name|
-			character = Character.find_by_name(character_name)
+			character = Character.find_by(name: character_name)
 			index = param.sub('character_','').to_i
 			quantity = params["quantity_#{index}"].to_i
 			initiative = params["initiative_#{index}"]
@@ -87,7 +87,6 @@ class CampaignsController < ApplicationController
 	end
 
 	def join
-		@campaign = Campaign.find(params[:id])
 		@membership = @campaign.membership_for current_user
 
 		case @membership.membership
@@ -109,9 +108,7 @@ class CampaignsController < ApplicationController
 	end
 
 	def invite
-		@campaign = Campaign.find(params[:id])
 		@membership = @campaign.membership_for params[:user_id].to_i
-		@user = User.find params[:user_id]
 
 		case @membership.membership
 		when :request
@@ -130,8 +127,6 @@ class CampaignsController < ApplicationController
 	end
 
 	def deny
-		@campaign = Campaign.find(params[:id])
-		@user = User.find params[:user_id]
 		@membership = @campaign.membership_for params[:user_id].to_i
 
 		case @membership.membership
@@ -151,8 +146,6 @@ class CampaignsController < ApplicationController
 	end
 
 	def clear
-		@campaign = Campaign.find(params[:id])
-		@user = User.find params[:user_id]
 		@membership = @campaign.membership_for params[:user_id].to_i
 
 		case @membership.membership
@@ -167,8 +160,6 @@ class CampaignsController < ApplicationController
 	end
 
 	def admin
-		@campaign = Campaign.find(params[:id])
-		@user = User.find params[:user_id]
 		@membership = @campaign.membership_for params[:user_id].to_i
 
 		case @membership.membership
@@ -182,13 +173,11 @@ class CampaignsController < ApplicationController
 	end
 
 	def edit
-		@campaign = Campaign.find(params[:id])
 	end
 
 	def update
-		@campaign = Campaign.find(params[:id])
 
-		if @campaign.update_attributes(params[:campaign])
+		if @campaign.update_attributes(strong_parameters)
 			redirect_to @campaign, flash: { success: "Successfully Modified Campaign" }
 		else
 			flash.now[:error] = "Error: #{@campaign.errors.full_messages.join(', ')}"
@@ -202,6 +191,18 @@ class CampaignsController < ApplicationController
 	end
 
 	private
+
+	def find_campaign
+		@campaign = Campaign.find(params[:id])
+	end
+
+	def find_user
+		@user = User.find(params[:user_id])
+	end
+
+	def strong_parameters
+		params.require(:campaign).permit(:name, :description, :is_public)
+	end
 
 	def signed_in_user
 		redirect_to signin_path, notice: 'Please Sign In' unless signed_in?

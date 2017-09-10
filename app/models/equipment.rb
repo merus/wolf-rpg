@@ -12,7 +12,6 @@
 #
 
 class Equipment < ActiveRecord::Base
-	attr_accessible :character_id, :slot, :name, :item_type
 	belongs_to :character, touch: true
 
 	validates :character_id, presence: true

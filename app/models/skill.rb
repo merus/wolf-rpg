@@ -14,7 +14,6 @@
 include ApplicationHelper
 
 class Skill < ActiveRecord::Base
-	attr_accessible :character_id, :level, :name, :required_skill
 	belongs_to :character, touch: true
 	has_many :dependent_skills, dependent: :destroy, foreign_key: :required_skill_id, class_name: 'Skill'
 	belongs_to :required_skill, class_name: 'Skill'

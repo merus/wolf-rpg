@@ -18,7 +18,6 @@
 #
 
 class User < ActiveRecord::Base
-	attr_accessible :email, :handle, :name, :password, :password_confirmation, :active_character, :character2_id, :character3_id, :active_campaign_id, :campaign2_id, :campaign3_id
 	has_secure_password
 	has_many :characters, dependent: :delete_all
 	has_many :campaign_members

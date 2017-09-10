@@ -1,16 +1,17 @@
 class CharactersController < ApplicationController
 	include ActionView::Helpers::TextHelper
 	# helper ApplicationHelper
-	before_filter :signed_in_user, except: [:show, :index, :export]
-	before_filter :visible_to_user, only: [:show, :export]
-	before_filter :correct_user, except: [:show, :index, :export, :new, :create, :import]
+	before_action :find_character, only: [:show, :index, :export, :edit, :update, :stats, :items, :skills, :abilities, :destroy]
+	before_action :signed_in_user, except: [:show, :index, :export]
+	before_action :visible_to_user, only: [:show, :export]
+	before_action :correct_user, except: [:show, :index, :export, :new, :create, :import]
 
 	def new
 		@character = Character.new
 	end
 
 	def create
-		@character = current_user.characters.build params[:character]
+		@character = current_user.characters.build(strong_parameters)
 		@character.privacy ||= :campaign if @character.in_campaign?
 		@character.privacy ||= :public
 
@@ -23,7 +24,6 @@ class CharactersController < ApplicationController
 	end
 
 	def show
-		@character = Character.find(params[:id])
 		current_user.push_active_character(@character) if signed_in?
 	end
 
@@ -53,7 +53,6 @@ class CharactersController < ApplicationController
 	end
 
 	def export
-		@character = Character.find(params[:id])
 		send_data(@character.export_xml, type: 'text/xml', filename: "#{@character.name}.xml")
 	end
 
@@ -76,12 +75,10 @@ class CharactersController < ApplicationController
 
 	# Prior to editing
 	def edit
-		@character = Character.find(params[:id])
 	end
 
 	def stats
-		@character = Character.find(params[:id])
-
+		#TODO: this seems exploitable
 		stats = @character.base_stats(params[:base_stats].to_i, params[:"raw_stats#{params[:base_stats]}"].to_i)
 		if @character.update_attributes(str: stats[0], dex: stats[1], int: stats[2], fai: stats[3])
 			@character.update_base_skills
@@ -93,15 +90,14 @@ class CharactersController < ApplicationController
 	end
 
 	def items
-		@character = Character.find(params[:id])
-
-		flash[:success] = "Changed Items to: Weapon:#{params[:primary]}, Off:#{params[:off_hand]}, Armour:#{params[:armour]}"
-		equiped = @character.equip primary: params[:primary], off_hand: params[:off_hand], armour: params[:armour]
+		strong_params = strong_parameters
+		#TODO: surely I should be checking whether this equipment is suitable
+		flash[:success] = "Changed Items to: Weapon:#{strong_params[:primary]}, Off:#{strong_params[:off_hand]}, Armour:#{params[:armour]}"
+		equiped = @character.equip(primary: params[:primary], off_hand: params[:off_hand], armour: params[:armour])
 		redirect_to @character, flash: { success: "Equiped: #{equiped.join(', ')}" }
 	end
 
 	def skills
-		@character = Character.find(params[:id])
 
 		changed = []
 		starting_skills = @character.skills.collect { |skill| skill.name }
@@ -135,7 +131,6 @@ class CharactersController < ApplicationController
 	end
 
 	def abilities
-		@character = Character.find(params[:id])
 		added, removed = [],[]
 
 		params.each do |ability_name, value|
@@ -164,9 +159,7 @@ class CharactersController < ApplicationController
 
 	# Post to editing
 	def update
-		@character = Character.find(params[:id])
-
-		if @character.update_attributes(params[:character])
+		if @character.update_attributes(strong_parameters)
 			redirect_to @character, flash: { success: "Changed Character Attributes" }
 		else
 			flash.now[:error] = "Error: #{@character.errors.full_messages.join(', ')}"
@@ -176,12 +169,19 @@ class CharactersController < ApplicationController
 	end
 
 	def destroy
-		character = Character.find(params[:id])
 		character.destroy
 		redirect_to characters_path, flash: { success: "Successfully Destroyed: #{character.name}" }
 	end
 
 	private
+
+	def find_character
+		@character = Character.find(params[:id])
+	end
+
+	def strong_parameters
+		params.require(:character).permit(:name, :race, :user_id, :privacy, :campaign_id)
+	end
 
 	def signed_in_user
 		redirect_to signin_path, notice: 'To do this action you must sign in' unless signed_in?
