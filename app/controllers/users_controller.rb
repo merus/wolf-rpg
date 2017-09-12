@@ -20,7 +20,7 @@ class UsersController < ApplicationController
 
 	def show
 		if @user == current_user
-			@invitations = CampaignMember.find_by(user: @user.id, membership: CampaignMember.membership(:invite))
+			@invitations = CampaignMember.where(user: @user.id, membership: :invite)
 			@campaigns_to_invite = []
 		else
 			@invitations = []

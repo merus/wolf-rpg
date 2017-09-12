@@ -16,7 +16,7 @@ class Equipment < ActiveRecord::Base
 
 	validates :character_id, presence: true
 	validates :name, presence: true
-	validates :slot, presence: true, inclusion: ['Primary', 'Off Hand', 'Armour']
+	validates :slot, presence: true, inclusion: ['Primary', 'Off Hand', 'Armour'], uniqueness: {scope: :character_id}
 	validates :item_type, presence: true, inclusion: ['Weapon', 'Shield', 'Armour']
 
 	@@armours = @@shields = @@weapons = nil
@@ -33,8 +33,9 @@ class Equipment < ActiveRecord::Base
 		self.shield_data.collect { |name, data| Equipment.new name: name, item_type: 'Shield' }
 	end
 
+	#TODO: models shouldn't be creating themselves
 	def self.equip(character, slot, name)
-		Equipment.find_all_by_character_id_and_slot(character.id, slot).each(&:delete)
+		Equipment.where(character: character, slot: slot).delete_all
 
 		item_type = case
 		when armour_data.has_key?(name) then 'Armour'
@@ -91,10 +92,6 @@ class Equipment < ActiveRecord::Base
 
 	def range
 		data[:range]
-	end
-
-	def str_mod
-		data[:effect][:str] if data.has_key? :effect
 	end
 
 	def str_mod

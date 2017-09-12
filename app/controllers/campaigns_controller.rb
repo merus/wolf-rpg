@@ -3,7 +3,6 @@ class CampaignsController < ApplicationController
 	before_action :find_user, only: [:invite, :deny, :clear, :admin]
 	before_action :signed_in_user, except: [:show, :index]
 	before_action :correct_user, except: [:show, :index, :new, :create, :join]
-	before_action :find_campaign, only:
 
 	def new
 		@campaign = Campaign.new
@@ -21,7 +20,6 @@ class CampaignsController < ApplicationController
 	end
 
 	def show
-
 		if @campaign.visible_to? current_user
 			current_user.push_active_campaign(@campaign) if signed_in?
 			@characters = Character.where(campaign_id: @campaign.id).paginate(page: params[:character_page], per_page: 12)
@@ -42,6 +40,7 @@ class CampaignsController < ApplicationController
 			quantity = params["quantity_#{index}"].to_i
 			initiative = params["initiative_#{index}"]
 
+			#TODO: ummmmmmmmm wat
 			case quantity
 			when 0 then
 			when 1

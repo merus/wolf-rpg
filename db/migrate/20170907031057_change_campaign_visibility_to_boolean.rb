@@ -4,7 +4,7 @@ class ChangeCampaignVisibilityToBoolean < ActiveRecord::Migration[5.1]
   end
 
   def up
-  	add_column :campaigns, :is_public, :integer, default: true
+  	add_column :campaigns, :is_public, :boolean, default: true
   	Campaign.where(visibility: 0).update_all(is_public: false)
   	remove_column :campaigns, :visibility
   end

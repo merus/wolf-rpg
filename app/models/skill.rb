@@ -16,11 +16,11 @@ include ApplicationHelper
 class Skill < ActiveRecord::Base
 	belongs_to :character, touch: true
 	has_many :dependent_skills, dependent: :destroy, foreign_key: :required_skill_id, class_name: 'Skill'
-	belongs_to :required_skill, class_name: 'Skill'
+	belongs_to :required_skill, class_name: 'Skill', optional: true
 
 	validates :character_id, presence: true
 	validates :level, presence: true, numericality: { greater_than: 0 }
-	validates :name, presence: true
+	validates :name, presence: true, uniqueness: {scope: :character_id}
 
 	BASE_SKILLS = %w[Endurance Sprint Observation Sense]
 	SYNERGY_TAGS = {

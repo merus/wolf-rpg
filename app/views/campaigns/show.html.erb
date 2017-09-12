@@ -8,14 +8,14 @@
 	<h3><%= @campaign.description %></h3>
 	<% unless @campaign.has_member? current_user or not signed_in? %>
 		<div class="center">
-			<% membership = CampaignMember.find_by_campaign_id_and_user_id(@campaign.id, current_user.id) %>
+			<% membership = @campaign.campaign_members.where(user: current_user).first %>
 			<% if membership.nil? %>
 				<%= link_to "Request Membership", join_campaign_path(@campaign), class: 'btn btn-large btn-primary' %>
-			<% elsif membership.membership == :invite %>
+			<% elsif membership.invite? %>
 				<%= link_to "Accept Invitation", join_campaign_path(@campaign), class: 'btn btn-large btn-primary' %>
-			<% elsif membership.membership == :request %>
+			<% elsif membership.request? %>
 				<h3>Request Pending</h3>
-			<% elsif membership.membership == :denied %>
+			<% elsif membership.denied? %>
 				<h3>Request Denied</h3>
 			<% end %>
 		</div>
@@ -64,7 +64,7 @@
 				<% end %>
 			</tr>
 		<% end %>
-		<% CampaignMember.find_all_by_campaign_id(@campaign.id).reject { |membership| membership.member? }.each do |membership| %>
+		<% @campaign.requested.each do |membership| %>
 			<tr>
 				<td/>
 				<td><%= link_to membership.user.handle, membership.user %></td>

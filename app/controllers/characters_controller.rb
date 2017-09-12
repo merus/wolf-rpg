@@ -1,7 +1,7 @@
 class CharactersController < ApplicationController
 	include ActionView::Helpers::TextHelper
 	# helper ApplicationHelper
-	before_action :find_character, only: [:show, :index, :export, :edit, :update, :stats, :items, :skills, :abilities, :destroy]
+	before_action :find_character, only: [:show, :export, :edit, :update, :stats, :items, :skills, :abilities, :destroy]
 	before_action :signed_in_user, except: [:show, :index, :export]
 	before_action :visible_to_user, only: [:show, :export]
 	before_action :correct_user, except: [:show, :index, :export, :new, :create, :import]
@@ -98,7 +98,6 @@ class CharactersController < ApplicationController
 	end
 
 	def skills
-
 		changed = []
 		starting_skills = @character.skills.collect { |skill| skill.name }
 
@@ -169,8 +168,8 @@ class CharactersController < ApplicationController
 	end
 
 	def destroy
-		character.destroy
-		redirect_to characters_path, flash: { success: "Successfully Destroyed: #{character.name}" }
+		@character.destroy
+		redirect_to characters_path, flash: { success: "Successfully Destroyed: #{@character.name}" }
 	end
 
 	private

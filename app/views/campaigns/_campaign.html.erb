@@ -3,7 +3,7 @@
 		<h2><%= link_to campaign.name, campaign %></h2>
 		<%= campaign.description %>
 		<% if signed_in? %>
-			<% membership = CampaignMember.find_by_user_id_and_campaign_id(current_user.id, campaign.id) %>
+			<% membership = campaign.campaign_members.where(user: current_user).first %>
 			<p class="center membership">
 				<% if membership.nil? %>
 					Not a Member

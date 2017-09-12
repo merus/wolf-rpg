@@ -14,47 +14,51 @@ class Campaign < ActiveRecord::Base
 	has_many :characters
 	has_many :campaign_members
 	has_many :users, through: :campaign_members
-	has_many :members, through: :campaign_members, source: :user, conditions: CampaignMember.member_sql
-	has_many :admins, through: :campaign_members, source: :user, conditions: CampaignMember.admin_sql
 
 	validates :name, presence: true
 
 	def add_member(member, membership_type=:member)
 		member_id = (member.is_a?(User) ? member.id : member.to_i)
-		self.campaign_members.create user_id: member_id, membership: membership_type
+		campaign_members.create user_id: member_id, membership: membership_type
 	end
 
 	def has_member?(member)
 		member_id = (member.is_a?(User) ? member.id : member.to_i)
-		self.members.exists? id: member_id
+		campaign_members.members.exists? id: member_id
 	end
 
 	def has_admin?(member)
 		member_id = (member.is_a?(User) ? member.id : member.to_i)
-		self.admins.exists? id: member_id
+		campaign_members.admins.exists? id: member_id
+	end
+
+	def members
+		users.where("campaign_members.membership IN (?)", [CampaignMember.memberships[:member], CampaignMember.memberships[:admin]])
 	end
 
 	def member_type(member)
 		member_id = (member.is_a?(User) ? member.id : member.to_i)
-		membership = self.campaign_members.find_by_user_id(member_id)
-		if membership
-			return membership.membership
-		else
-			return nil
-		end
+		campaign_members.where(user_id: member_id).first.try(:membership)
 	end
 
 	def membership_for(member)
 		member_id = (member.is_a?(User) ? member.id : member.to_i)
-		self.campaign_members.find_by_user_id(member_id) || self.campaign_members.build(user_id: member_id, membership: :none)
+		campaign_members.find_or_create(user_id: member_id)
+	end
+
+	def requested
+		users.where("campaign_members.membership IN (?)", 
+			[CampaignMember.memberships[:invite], CampaignMember.memberships[:request], CampaignMember.memberships[:denied]])
 	end
 
 	def visible_to?(user)
 		return true if is_public
 
+		#TODO: this has a bad smell. I suspect this entire function needs to be scrapped.
+
 		case user
-		when User then type = self.campaign_members.find_by_user_id(user.id)
-		when Integer then type = self.campaign_members.find_by_user_id(user)
+		when User then type = self.campaign_members.find_by(user_id: user.id)
+		when Integer then type = self.campaign_members.find_by(user_id: user)
 		else return false
 		end
 

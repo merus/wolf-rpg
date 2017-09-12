@@ -130,7 +130,7 @@ describe 'Campaign Pages' do
 					should have_selector('title', text: campaign_name)
 					should have_selector('h1', text: campaign_name)
 					should have_selector('h3', text: description)
-					Campaign.find_by_name(campaign_name).should have_admin(other_user)
+					Campaign.find_by(name: campaign_name).should have_admin(other_user)
 				end
 
 			end

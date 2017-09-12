@@ -20,9 +20,10 @@ include ApplicationHelper
 include SessionsHelper
 
 class Character < ActiveRecord::Base
-	has_many :skills, dependent: :delete_all, uniq: true, class_name: 'Skill'
-	has_many :abilities, dependent: :delete_all, uniq: true, class_name: 'Ability'
-	has_many :items, dependent: :delete_all, uniq: true, class_name: 'Equipment'
+	#TODO: enforce uniqueness of skills/abilities/items in DB
+	has_many :skills, dependent: :delete_all, class_name: 'Skill'
+	has_many :abilities, dependent: :delete_all, class_name: 'Ability'
+	has_many :items, dependent: :delete_all, class_name: 'Equipment'
 	belongs_to :campaign
 	belongs_to :user
 
@@ -56,6 +57,7 @@ class Character < ActiveRecord::Base
 			self.add_ability 'Atheist'
 			self.add_ability 'Literate'
 		end
+		self.save!
 	end
 
 	def self.privacy(priv)
@@ -229,11 +231,11 @@ class Character < ActiveRecord::Base
 	end
 
 	def skill(skill_name)
-		self.skills.find_by_name skill_name
+		self.skills.find_by(name: skill_name)
 	end
 
 	def has_ability?(ability_name)
-		self.abilities.find_by_name ability_name
+		self.abilities.find_by(name: ability_name)
 	end
 
 	def add_skill(skill_name)
@@ -250,7 +252,7 @@ class Character < ActiveRecord::Base
 	end
 
 	def remove_ability(ability_name)
-		self.abilities.find_by_name(ability_name).delete
+		self.abilities.find_by(name: ability_name).delete
 	end
 
 	def can_add_skill?(skill_name)
@@ -289,37 +291,31 @@ class Character < ActiveRecord::Base
 	end
 
 	def primary
-		Equipment.find_by_character_id_and_slot(self.id, 'Primary')
+		items.where(slot: 'Primary')
 	end
 
 	def primary_equiped?
-		Equipment.exists? character_id: self.id, slot: 'Primary'
+		primary.count > 0
 	end
 
 	def off_hand
-		Equipment.find_by_character_id_and_slot(self.id, 'Off Hand')
+		items.where(slot: 'Off Hand')
 	end
 
 	def off_hand_equiped?
-		Equipment.exists? character_id: self.id, slot: 'Off Hand'
+		off_hand.count > 0
 	end
 
 	def armour
-		Equipment.find_by_character_id_and_slot(self.id, 'Armour')
+		items.where(slot: 'Armour')
 	end
 
 	def armour_equiped?
-		Equipment.exists? character_id: self.id, slot: 'Armour'
-	end
-
-	def items
-		Equipment.find_all_by_character_id(self.id)
+		armour.count > 0
 	end
 
 	def unequip(slot)
-		allthings = Equipment.find_all_by_character_id_and_slot(self.id,slot)
-		allthings.each { |thing| thing.delete } if allthings
-		# self.items.find_all_by_slot(slot).try(:delete)
+		items.where(slot: slot).delete_all
 	end
 
 	def equip(equipment)
@@ -493,8 +489,9 @@ class Character < ActiveRecord::Base
 	# 	parse_effect_xml(skill, effect[:duration], raw) if effect[:duration]
 	# end
 
+	#TODO: this should go; the canonical roll code is in JavaScript
 	def roll(skill_name)
-		skill = self.skills.find_by_name(skill_name)
+		skill = self.skills.find_by(name: skill_name)
 		skill ||= Skill.new name: skill_name, level: 0
 
 		dice = self.power(skill, skill.effects[0], true)

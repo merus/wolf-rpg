@@ -13,54 +13,21 @@
 class CampaignMember < ActiveRecord::Base
 	belongs_to :user
 	belongs_to :campaign
+	enum membership: [:non_member, :admin, :member, :invite, :request, :denied]
 
-	MEMBERSHIP = 
-	{
-		none: 0,
-		admin: 1,
-		member: 2,
-		invite: 3,
-		request: 4,
-		denied: 5,
-	}
+	scope :members, -> { where(membership: [:member, :admin]) }
+	scope :admins, -> { where(membership: :admin) }
+	scope :requested, -> { where(membership: [:invite, :request, :denied]) }
 
 	validates :campaign_id, presence: true
 	validates :user_id, presence: true
-	validates :membership, presence: true, inclusion: MEMBERSHIP.keys
+	validates :membership, presence: true
 
 	def self.admin_of?(user, campaign)
-		self.exists? campaign_id: campaign.id, user_id: user.id, membership: 1
-	end
-
-	def self.membership(mem)
-		MEMBERSHIP[mem]
-	end
-
-	def membership
-		MEMBERSHIP.invert[read_attribute :membership]
-	end
-
-	def membership=(value)
-		write_attribute :membership, MEMBERSHIP[value]
-	end
-
-	def self.member_sql
-		"membership IN (#{MEMBERSHIP[:member]},#{MEMBERSHIP[:admin]})"
-	end
-
-	def self.admin_sql
-		"membership = #{MEMBERSHIP[:admin]}"
-	end
-
-	def self.request_sql
-		"membership = #{MEMBERSHIP[:request]}"
-	end
-
-	def admin?
-		1 == read_attribute(:membership)
+		self.exists? campaign_id: campaign.id, user_id: user.id, membership: :admin
 	end
 
 	def member?
-		read_attribute(:membership) == 1 or read_attribute(:membership) == 2
+		[:member, :admin].contains? membership
 	end
 end

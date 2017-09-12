@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 20170907031057) do
     t.text "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer "is_public", default: 1
+    t.boolean "is_public", default: true
   end
 
   create_table "characters", id: :serial, force: :cascade do |t|

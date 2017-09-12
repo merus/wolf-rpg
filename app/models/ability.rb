@@ -13,7 +13,7 @@ class Ability < ActiveRecord::Base
 	belongs_to :character, touch: true
 
 	validates :character_id, presence: true
-	validates :name, presence: true
+	validates :name, presence: true, uniqueness: {scope: :character_id}
 
 	@@raw_data = nil
 
