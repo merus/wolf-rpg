@@ -105,7 +105,7 @@ function roll(amount, faces, keep)
 		dice[i] = Math.ceil(Math.random()*faces);
 	}
 
-	dice.sort.reverse;
+	dice.sort((a, b) => (b - a));
 
 	for (var i = 0; (i < keep) && (i < amount); i++) {
 		result += Math.floor(dice[i] / 4);
