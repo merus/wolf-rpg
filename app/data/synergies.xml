@@ -1,0 +1,44 @@
+<Synergies>
+    <Synergy>
+        <Name>Warrior</Name>
+        <Bonus>
+            <HP>3</HP>
+            <MP>0</MP>
+            <Wild>2</Wild>
+        </Bonus>
+    </Synergy>
+    <Synergy>
+        <Name>Rogue</Name>
+        <Bonus>
+            <HP>2</HP>
+            <MP>1</MP>
+            <Wild>2</Wild>
+        </Bonus>
+    </Synergy>
+    <Synergy>
+        <Name>Lore</Name>
+        <Bonus>
+            <HP>1</HP>
+            <MP>2</MP>
+            <Wild>2</Wild>
+        </Bonus>
+    </Synergy>
+    <Synergy>
+        <Name>Battle Mage</Name>
+    </Synergy>
+    <Synergy>
+        <Name>Mechanist</Name>
+    </Synergy>
+    <Synergy>
+        <Name>Trickster</Name>
+    </Synergy>
+    <Synergy>
+        <Name>Mechanist</Name>
+    </Synergy>
+    <Synergy>
+        <Name>Channeller</Name>
+    </Synergy>
+    <Synergy>
+        <Name>Necromancer</Name>
+    </Synergy>
+</Synergies>

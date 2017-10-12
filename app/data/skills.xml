@@ -1,4 +1,7 @@
-<Skills>
+<?xml version="1.0"?>
+
+<Skills xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    
     <Skill>
         <Name>Attack</Name>
         <Stat>Str</Stat>
@@ -22,6 +25,7 @@
         <Stat>Dex</Stat>
         <Cost>1</Cost>
         <Synergy>Rogue</Synergy>
+        <Synergy>Warrior</Synergy>
         <Text>
             Unseen and unheard the skilled rogue can approach a victim and take the time necessary to ensure that the blow they strike is precise and effective.
             A character who is hidden or moving silently can perform a <name>Backstab</name> of power <check type="dex">Attack+Backstab</check>. The attacker gains the +3 bonus for attacking an unaware defender. The damage of this attack is equal to its power.
@@ -38,8 +42,8 @@
         <Name>Ball Lightning</Name>
         <Require>Lightning Bolt</Require>
         <Stat>Fai</Stat>
-        <Spell>Arthur</Spell>
         <Cost>1</Cost>
+        <Spell>Arthur</Spell>
         <Synergy>Battle Mage</Synergy>
         <Text>
             By calling on the power of <name>Arthur</name> the character is able to summon a ball of pure lightning to attack their foes.
@@ -80,8 +84,8 @@
         <Name>Black Hole</Name>
         <Require>Portal</Require>
         <Stat>Fai</Stat>
-        <Spell>Oxdoro</Spell>
         <Cost>5</Cost>
+        <Spell>Oxdoro</Spell>
         <Synergy>Mechanist</Synergy>
         <Text>
             By calling on the power of <name>Oxdoro</name> the character is able to bend space in on itself creating a point in space that sucks everything towards it and crushes those inside.
@@ -103,8 +107,8 @@
         <Invert/>
         <Divide/>
         <Stat>Fai</Stat>
-        <Spell>Loreanna</Spell>
         <Cost>3</Cost>
+        <Spell>Loreanna</Spell>
         <Synergy>Trickster</Synergy>
         <Text>
             Calling on the power of <name>Loreanna</name> fortune favours someone in all they do.
@@ -122,9 +126,10 @@
         <Name>Blink</Name>
         <Require>Dodge</Require>
         <Stat>Dex</Stat>
-        <Spell>Oxdoro</Spell>
         <Cost>3</Cost>
+        <Spell>Oxdoro</Spell>
         <Synergy>Mechanist</Synergy>
+        <Synergy>Rogue</Synergy>
         <Text>
             By calling on the power of <name>Oxdoro</name> the character can quickly bend space so as to travel a short distance without moving.
             If used as a defence the power of this skill is <check type="dex">Dodge+Blink</check>. If the power of the attack is equal to or less than this power then the attack deals no damage nor has any effect on the defender.
@@ -502,7 +507,7 @@
             Each level of this skill increases the character's maximum <HP/> by three. As death occurs at -<HPMax/> this skill increases the range that a character will remain unconscious but not dead.
         </Text>
         <Effect>
-            <Power times="3"><skill>Extra HP</skill></Power>
+            <Power times="2"><skill>Extra HP</skill></Power>
             <Quick>Character gains +X to max HP.</Quick>
         </Effect>
     </Skill>
@@ -515,7 +520,7 @@
             This character has willpower beyond normal bounds. Each level of this skill increases the character's maximum <MP/> by three.
         </Text>
         <Effect>
-            <Power times="3"><skill>Extra MP</skill></Power>
+            <Power times="2"><skill>Extra MP</skill></Power>
             <Quick>Character gains +X to max MP</Quick>
         </Effect>
     </Skill>
@@ -733,14 +738,14 @@
         <Name>Impenetrable Field</Name>
         <Stat>Fai</Stat>
         <Cost>3</Cost>
-        <Spell>Arthur</Spell>
-        <Synergy>Battle Mage</Synergy>
+        <Spell>Oxdoro</Spell>
+        <Synergy>Mechanist</Synergy>
         <Text>
-            By calling on the power of <name>Arthur</name> the caster creates a barrier that protects them from any harm.
-            The power of this skill is <check type="fai">Impenetrable Field</check>. The field has <HP/> equal to the power of the skill. The field has the skill <name>Block</name> at the level of half the power of this skill. When any attacker targets the character they target the field instead. When the field drops to <HP>0</HP> it is destroyed and any remaining damage targets the character instead. During the Refresh and Regenerate phase of Combat the field loses <HP>1</HP>. Casting requires a <name>Major Action</name>.
+            By calling on the power of <name>Oxdoro</name> the caster creates a barrier that protects them from any harm.
+            The power of this skill is <check type="fai">Impenetrable Field</check>. The field has <HP/> equal to the power of the skill. The field has the skill <name>Block</name> at the level of half the power of this skill. When any attacker targets the character they target the field instead. When the field drops to <HP>0</HP> it is destroyed and any remaining damage targets the character instead. During the Refresh and Regenerate phase of Combat the field loses <HP>1</HP>. Casting requires a <name>Minor Action</name>.
         </Text>
         <Effect>
-            <Action>Major</Action>
+            <Action>Minor</Action>
             <Mana>5</Mana>
             <Power type="roll"><skill>Impenetrable Field</skill></Power>
             <Quick>Gain a field with HP of X and Block at level X/2</Quick>
@@ -772,8 +777,8 @@
     <Skill>
         <Name>Increase Stat</Name>
         <Name>Reduce Stat</Name>
-        <Divide/>
         <Invert/>
+        <Divide/>
         <Stat>Fai</Stat>
         <Cost>5</Cost>
         <Spell>Loreanna</Spell>
@@ -819,11 +824,11 @@
         <Synergy>Rogue</Synergy>
         <Text>
             Ever ready for action the character anticipates the actions of others.
-            This skill is used at the start of combat. The power is <check type="int">Initiative+1</check>. The turn order of characters is determined by the highest power of this skill. If there is a tie then then the characters that tied reroll to see who goes first amongst themselves.
+            This skill is used at the start of combat. Make a <check type="int">Observation</check> or <check type="dex">Sprint</check> and add the level of this skill to the result. The turn order of characters is determined by the highest result of this check. If there is a tie then player character start before non-player characters.
         </Text>
         <Effect>
-            <Power type="roll" add="1"><skill>Initiative</skill></Power>
-            <Quick>Roll for X at start of combat. Turn order is descending X.</Quick>
+            <Power><skill>Initiative</skill></Power>
+            <Quick>Add X to Sprint or Observation to determine turn order.</Quick>
         </Effect>
     </Skill>
     
@@ -870,6 +875,26 @@
             <Mana>5</Mana>
             <Power type="roll"><skill>Locate</skill></Power>
             <Quick>Find an object within a radius of result distance.</Quick>
+        </Effect>
+    </Skill>
+    
+    <Skill>
+        <Name>Life Field</Name>
+        <Require>Heal</Require>
+        <Stat>Fai</Stat>
+        <Cost>5</Cost>
+        <Spell>Innodi</Spell>
+        <Synergy>Necromancer</Synergy>
+        <Text>
+            By calling on the power of <name>Innodi</name> the caster can create a barrier of life force around them to take the blows in their place.
+            The power of the barrier is <check type="fai">Life Field</check>. The barrier lasts for its power in turns. Every time is dealt damage they instead lose mana. They lose one mana for every result level rounded up.
+            The caster may use a <name>Minor Action</name> to dispell the field.
+        </Text>
+        <Effect>
+            <Action>Minor</Action>
+            <Mana>2</Mana>
+            <Power type="roll"><skill>Life Field</skill></Power>
+            <Quick>Creates a barrier for X turns. Each result level damage instead reduces MP by one.</Quick>
         </Effect>
     </Skill>
     
@@ -979,6 +1004,24 @@
     </Skill>
     
     <Skill>
+        <Name>Mirror Image</Name>
+        <Stat>Fai</Stat>
+        <Cost>2</Cost>
+        <Spell>Loreanna</Spell>
+        <Synergy>Trickster</Synergy>
+        <Text>
+            By calling on the power of <name>Loreanna</name> the character can appear as many making them harder to attack.
+            The power of this skill is <check type="fai">Mirror Image</check>. This spell lasts for its power in turns. Any character may make a <check>Notice</check> once to see through the illusion. If they fail this check then every time they attack the character they have a reduced chance to hit the target. They have a one in the result level chance of hitting the correct target.
+        </Text>
+        <Effect>
+            <Action>Minor</Action>
+            <Mana>5</Mana>
+            <Power type="roll"><skill>Mirror Image</skill></Power>
+            <Quick>Attackers have a one in result level chance of hitting the character. Attackers have one chance to make a notice check to see through the illusion.</Quick>
+        </Effect>
+    </Skill>
+    
+    <Skill>
         <Name>Observation</Name>
         <Stat>Int</Stat>
         <Cost>1</Cost>
@@ -1007,10 +1050,10 @@
         <Text>
             By calling the power of <name>Oxdoro</name> the character can take temporary energies and make them permanent.
             The power of this skill is <check type="fai">Permanence</check>. If the power of this skill is at least the power of a spell with ongoing mana costs the spell no longer requires the ongoing cost. However the caster of the ongoing spell reduces their <MPMax/> by twice the ongoing cost. If the skill required a <name>Major Action</name> to sustain it now requires a <name>Minor Action</name>. If the skill required a <name>Minor Action</name> to sustain it now requires no action to sustain.
-        </Text>t
+        </Text>
         <Effect>
-            <Power type="roll"><skill>Permanence</skill></Power>
             <Mana>5</Mana>
+            <Power type="roll"><skill>Permanence</skill></Power>
             <Quick>If X is at least the power of a spell, the caster gets -2X to max MP but pays no more MP.</Quick>
         </Effect>
     </Skill>
@@ -1027,8 +1070,8 @@
         </Text>
         <Effect>
             <Action>Major</Action>
-            <Power type="roll"><skill>Phase Shift</skill></Power>
             <Mana>5,2</Mana>
+            <Power type="roll"><skill>Phase Shift</skill></Power>
             <Quick>Become Ethereal.</Quick>
         </Effect>
     </Skill>
@@ -1129,6 +1172,7 @@
         <Stat>Dex</Stat>
         <Cost>2</Cost>
         <Synergy>Rogue</Synergy>
+        <Synergy>Warrior</Synergy>
         <Text>
             The character has excellent knowledge of all creatures weak points and the training to strike at them.
             The power of this attack is <check type="dex" penalty="1">Attack+Precision Attack</check>. The damage is equal to the power of the attack. They may use a <name>Minor Action</name> to get an additional +1 to their skill check.
@@ -1171,16 +1215,22 @@
         <Spell>Arthur</Spell>
         <Synergy>Battle Mage</Synergy>
         <Text>
-            By calling on the power of <name>Arthur</name> the character is able to take a projectile and fire it back to its origin.
-            The power of this skill is <check type="fai">Redirect</check>. If the power of the projectile attack is equal to or less than this power then the attack targets the attacker instead. The attacker then can choose to defend against the attack.
+            By calling on the power of <name>Arthur</name> the character is able to take a projectile and fire it back to its origin or take a melee blow and direct it elsewhere.
+            The power of this skill is <check type="fai">Redirect</check> against a projectile attack. If the power of the projectile attack is equal to or less than this power then the attack targets the attacker instead. The attacker then can choose to defend against the attack.
+            The power of this skill is <check type="fai">Redirect</check> against a melee attack. If the power of the attack is equal to or less than this power then the attack targets another character in melee range or any empty space beside them.
             This skill may be used to redirect a projectile targeting another character. The effect is the same and a <name>Minor Action</name> is required if used in this way.
-            This skill may only be used on projectile attacks.
         </Text>
         <Effect>
             <Action>Defend</Action>
             <Mana>4</Mana>
             <Power type="roll"><skill>Redirect</skill></Power>
             <Quick>If X is at least a projectile attack then the attack targets the attacker.</Quick>
+        </Effect>
+        <Effect>
+            <Action>Defend</Action>
+            <Mana>4</Mana>
+            <Power type="roll"><skill>Redirect</skill></Power>
+            <Quick>If X is at least a melee attack then the attack targets an adjacent space.</Quick>
         </Effect>
     </Skill>
     
@@ -1396,7 +1446,11 @@
             <Action>Major</Action>
             <Mana>5,X</Mana>
             <Power type="roll"><skill>Swarm of Rats</skill></Power>
+<<<<<<< HEAD
             <Quick>Summon twice result level rats. Each rat has <HP>1</HP> and attacks for 2 damages ignoring shields.</Quick>
+=======
+            <Quick>Summon X rats. Each rat has 1 HP and attacks for 2 damages ignoring shields.</Quick>
+>>>>>>> b6d1f2e32242c147e341c07b7076e1457d030373
         </Effect>
     </Skill>
     
@@ -1578,7 +1632,7 @@
         <Synergy>Channeller</Synergy>
         <Text>
             As a devout follower of <name>Ird'ken</name> the caster is able to draw extreme divine power from <name>Ird'ken</name> to cause chaos or order.
-            The power of this skill is <check type-="fai">Follower of Ird'ken</check>. The duration of this skill is the result duration. Whenever each nearby character in the effect performs a <name>Major Action</name> they instead pick the result level number of skills. The caster then chooses which skill the target actually performs. The target still chooses the specifics of the skill they use such as targets. If the target does not have sufficient skills that have <name>Major Action</name>s then they pick as many skills as they can.
+            The power of this skill is <check type="fai">Follower of Ird'ken</check>. The duration of this skill is the result duration. Whenever each nearby character in the effect performs a <name>Major Action</name> they instead pick the result level number of skills. The caster then chooses which skill the target actually performs. The target still chooses the specifics of the skill they use such as targets. If the target does not have sufficient skills that have <name>Major Action</name>s then they pick as many skills as they can.
             This skill is unaffected by <name>Counter-spell</name>, <name>Spell Shield</name>, <name>Inversion</name>, <name>Steal Spell</name> and <name>Void</name>. Casting requires a <name>Major Action</name>.
         </Text>
         <Effect>

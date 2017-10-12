@@ -163,7 +163,7 @@ class Skill < ActiveRecord::Base
 	end
 
 	def has_synergy?
-		not synergy_name.nil?
+        self.class.raw_data[self.name].has_key? :synergy
 	end
 
 	def synergy_name
@@ -173,6 +173,14 @@ class Skill < ActiveRecord::Base
 	def synergy_css(prefix="")
 		"#{prefix}#{SYNERGY_TAGS[self.synergy_name]}"
 	end
+
+    def has_sub_synergy?
+        self.class.raw_data[self.name].has_key? :sub_synergy
+    end
+
+    def sub_synergy
+        self.class.raw_data[self.name][:sub_synergy]
+    end
 
 	def name_tag(prefix)
 		"#{prefix}_#{self.name.gsub(' ', '_')}"
@@ -263,10 +271,17 @@ class Skill < ActiveRecord::Base
 
 				skill[:stat] = skill_xml.find_first('Stat').content if skill_xml.find_first('Stat')
 				skill[:cost] = skill_xml.find_first('Cost').content.to_i
-				skill[:synergy] = skill_xml.find_first('Synergy').content if skill_xml.find_first('Synergy')
 				skill[:synergy_css] = SYNERGY_TAGS[skill[:synergy]]
 				skill[:spell] = skill_xml.find_first('Spell').content if skill_xml.find_first('Spell')
 				skill[:required_skill] = skill_xml.find_first('Require').content if skill_xml.find_first('Require')
+                
+                skill_xml.find('Synergy').each do |synergy|
+                    if skill[:synergy].nil?
+                        skill[:synergy] = synergy.content
+                    else
+                        skill[:sub_synergy] = synergy.content
+                    end
+                end
 
 				skill[:required_skill] ||= case skill[:stat]
 				when 'Str' then 'Endurance'

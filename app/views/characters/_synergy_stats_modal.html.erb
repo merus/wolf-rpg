@@ -1,0 +1,16 @@
+<div id="synergyStatsModal" class="modal hide fade" style="display: none;">
+    <%= form_for(@character, url: {action: :synergy_stats}) do |f| %>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Change Synergy Stat Bonuses</h3>
+        </div>
+        <div class="modal-body">
+            <%= label_tag :synergy_stats, 'Synergy Bonus Distribution' %>
+            <%= select_tag :synergy_stats, options_for_select(@character.synergy_stats_options, @character.synergy_stats_selected) %>
+        </div>
+        <div class="modal-footer">
+            <a href='#' class="btn" data-dismiss="modal">Cancel</a>
+            <%= f.submit "Change Bonuses", class: "btn btn-small btn-primary" %>
+        </div>
+    <% end %>
+</div>

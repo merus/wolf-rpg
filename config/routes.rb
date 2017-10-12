@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       patch :items
       patch :skills
       patch :abilities
+      patch :synergy_stats
     end
 
     collection do

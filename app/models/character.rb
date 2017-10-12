@@ -36,11 +36,30 @@ class Character < ActiveRecord::Base
 	NIL_STATS = [[0,0,0,0]]
 
 	BASE_STATS = {
-		'Wolf' => WOLF_STATS,
-		'Dwarf' => DWARF_STATS,
-		'Goblin' => GOBLIN_STATS,
-		'Vampire' => VAMPIRE_STATS,
+		'Wolf'      => WOLF_STATS,
+		'Dwarf'     => DWARF_STATS,
+		'Goblin'    => GOBLIN_STATS,
+		'Vampire'   => VAMPIRE_STATS,
 	}
+    
+    # The number of levels required to gain one synergy point
+    LEVELS_PER_SYNERGY = {
+        'Wolf'      => 8,
+        'Dwarf'     => 8,
+        'Goblin'    => 6,
+        'Vampire'   => 8,
+    }
+    
+    # If this is true then each synergy point adds to its skills. If false it does not.
+    SYNERGY_ADDS_TO_SKILLS = false
+    
+    # The number of dice kept when rolling if the character has no synergy points in the skill. Comment out to keep all dice.
+    KEEP_DICE_BASE = 3
+    
+    # Bonuses for following gods
+    SKILL_BONUS_FOR_FOLLOWING_OTHERS = 1
+    SKILL_BONUS_FOR_FOLLOWING_TRAVAER = 1
+    SKILL_PENALTY_FOR_FOLLOWING_GODS = 0 # Can be -1 ...
 
 	validates :name, presence: true, length: { maximum: 100 }
 	validates :race, presence: true, inclusion: BASE_STATS.keys
@@ -48,8 +67,11 @@ class Character < ActiveRecord::Base
 	validates :dex, presence: true, inclusion: [4,6,8,10,12]
 	validates :int, presence: true, inclusion: [4,6,8,10,12]
 	validates :fai, presence: true, inclusion: [4,6,8,10,12]
+    validates :synergy_hp, presence: true, numericality: { greater_than_or_equal_to: 0 }
 	validates :user_id, presence: true
 	validates :privacy, presence: true, inclusion: PRIVACY.keys
+    
+    @@synergy_data = nil
 
 	after_create do
 		update_base_skills
@@ -80,6 +102,7 @@ class Character < ActiveRecord::Base
 			character.dex = stats_xml.find_first('Dexterity').content.to_i
 			character.int = stats_xml.find_first('Intelligence').content.to_i
 			character.fai = stats_xml.find_first('Faith').content.to_i
+            character.synergy_hp = stats_xml.find_first('SynergyHP').content.to_i
 
 			raise 'Not Saved' unless character.save
 
@@ -122,6 +145,7 @@ class Character < ActiveRecord::Base
 			stats_node << (XML::Node.new('Dexterity') << XML::Node.new_text(self.dex.to_s))
 			stats_node << (XML::Node.new('Intelligence') << XML::Node.new_text(self.int.to_s))
 			stats_node << (XML::Node.new('Faith') << XML::Node.new_text(self.fai.to_s))
+            stats_node << (XML::Node.new('SynergyHP') << XML::Node.new_text(self.synergy_hp))
 
 			# Skills
 			skills_node = XML::Node.new('Skills')
@@ -373,6 +397,34 @@ class Character < ActiveRecord::Base
 		end
 	end
 
+    def synergy_stats
+        if @synergy_stats.nil?
+            @synergy_stats = {hp_min: 0, mp_min: 0, wild: 0, hp: 0, mp: 0}
+            # Calculate min hp, min mp and wild.
+            self.synergies.each do |name, synergy|
+                if Character.synergy_data.has_key? name
+                    @synergy_stats[:hp_min] += Character.synergy_data[name][:hp] * synergy[:level]
+                    @synergy_stats[:mp_min] += Character.synergy_data[name][:mp] * synergy[:level]
+                    @synergy_stats[:wild] += Character.synergy_data[name][:wild] * synergy[:level]
+                end
+            end
+            
+            hp_max = @synergy_stats[:hp_min] + @synergy_stats[:wild]
+            
+            # Ensure that the character synergy_hp is in the correct range
+            if self.synergy_hp.nil? or self.synergy_hp > hp_max
+                self.update_attribute(:synergy_hp, hp_max)
+            elsif self.synergy_hp < @synergy_stats[:hp_min]
+                self.update_attribute(:synergy_hp, @synergy_stats[:hp_min])
+            end
+            
+            # Calculate actual bonus hp and mp
+            @synergy_stats[:hp] = self.synergy_hp
+            @synergy_stats[:mp] = @synergy_stats[:hp_min] + @synergy_stats[:mp_min] + @synergy_stats[:wild] - @synergy_stats[:hp]
+        end
+        @synergy_stats
+    end
+
 	def synergies
 		if @synergies.nil?
 			bonus_remaining = true
@@ -386,18 +438,18 @@ class Character < ActiveRecord::Base
 
 			synergies.each do |synergy_name, synergy|
 				synergy[:raw] = synergy[:level]
-				synergy[:level] /= (race == 'Goblin') ? 6 : 10
+                synergy[:level] /= LEVELS_PER_SYNERGY[self.race]
 			end
 
 			self.abilities.each do |ability|
 				if ability.has_synergy?
-					if synergies[ability.synergy_name][:level] < synergies[ability.synergy_name][:spent]+2
-						bonus_remaining ? bonus_remaining = false : synergies['No Class'][:spent] += 3
+					if synergies[ability.synergy_name][:level] < synergies[ability.synergy_name][:spent] + 1
+						bonus_remaining ? bonus_remaining = false : synergies['No Class'][:spent] += 2
 					else
-						synergies[ability.synergy_name][:spent] += 2
+						synergies[ability.synergy_name][:spent] += 1
 					end
 				else
-					synergies['No Class'][:spent] += 2
+					synergies['No Class'][:spent] += 1
 				end
 			end
 
@@ -412,7 +464,7 @@ class Character < ActiveRecord::Base
 
 			if synergies['No Class'][:remaining] < 0 and bonus_remaining
 				bonus_remaining = false
-				synergies['No Class'][:remaining] += 2
+				synergies['No Class'][:remaining] += 1
 			end
 
 			@synergy_bonus = bonus_remaining
@@ -447,14 +499,26 @@ class Character < ActiveRecord::Base
 
 		total = effect_xml.attributes['add'].to_i
 		effect_xml.find('skill').each { |skill_xml| total += self.skill(skill_xml.content).level if self.has_skill? skill_xml.content }
-		total += self.synergies[skill.synergy_name][:level] if skill.has_synergy? and self.has_synergy? skill.synergy_name
+        total += self.synergies[skill.synergy_name][:level] if SYNERGY_ADDS_TO_SKILLS and skill.has_synergy? and self.has_synergy? skill.synergy_name
+        
+        if defined? KEEP_DICE_BASE
+            keep_dice = KEEP_DICE_BASE
+            if not self.synergies.empty?
+                if skill.has_synergy?
+                    keep_dice += self.synergies[skill.synergy_name][:level] if self.has_synergy? skill.synergy_name
+                    keep_dice += self.synergies[skill.sub_synergy][:level] if skill.has_sub_synergy? and self.has_synergy? skill.sub_synergy
+                else
+                    keep_dice += self.synergies.values.map { |synergy| synergy[:level] }.max
+                end
+            end
+        end
 
 		if skill.spell and self.follower?
 			god = self.follower_of
 			if god == "Travaer"
-				total += (skill.invertible?) ? 1 : -1
+				total += (skill.invertible?) ? SKILL_BONUS_FOR_FOLLOWING_TRAVAER : SKILL_PENALTY_FOR_FOLLOWING_GODS
 			else
-				total += (skill.spell == god) ? 2 : -1
+				total += (skill.spell == god) ? SKILL_BONUS_FOR_FOLLOWING_OTHERS : SKILL_PENALTY_FOR_FOLLOWING_GODS
 			end
 		end
 		total += self.weapon_bonus if effect_xml.attributes['weapon']
@@ -477,8 +541,13 @@ class Character < ActiveRecord::Base
 
 		dice_type += 2 * effect_xml.attributes['die'].to_i # if no 'die' attribute then result becomes nil.to_i == 0
 
-		return [total.to_i, dice_type] if raw
-		return "<span onClick='roll(#{total.to_i}, #{dice_type})'>#{total.to_i}d#{dice_type}</span>".html_safe
+        if defined? KEEP_DICE_BASE
+            return [total.to_i, dice_type, keep_dice] if raw
+            return "<span onClick='roll(#{total.to_i}, #{dice_type}, #{keep_dice})'>#{total.to_i}d#{dice_type}k#{keep_dice}</span>".html_safe
+        else
+            return [total.to_i, dice_type] if raw
+            return "<span onClick='roll(#{total.to_i}, #{dice_type})'>#{total.to_i}d#{dice_type}</span>".html_safe
+        end
 	end
 
 	def power(skill, effect, raw=false)
@@ -523,6 +592,20 @@ class Character < ActiveRecord::Base
 		end
 	end
 
+    def synergy_stats_options
+        options = {}
+        for index in 0..self.synergy_stats[:wild]
+            hp = self.synergy_stats[:hp_min] + index
+            mp = self.synergy_stats[:mp_min] + self.synergy_stats[:wild] - index
+            options["+#{hp} HP +#{mp} MP"] = index
+        end
+        options
+    end
+
+    def synergy_stats_selected
+        self.synergy_hp - self.synergy_stats[:hp_min]
+    end
+
 	def xp(type = nil)
 		spent_xp = 0
 		self.skills.each { |skill| spent_xp += skill.cost * skill.level unless type == :spell and skill.spell.nil? }
@@ -531,9 +614,8 @@ class Character < ActiveRecord::Base
 
 	def hp_max
 		extra_hp = self.has_skill?('Extra HP') ? self.skill('Extra HP').level : 0
-		warrior = self.has_synergy?('Warrior') ? self.synergies['Warrior'][:level] : 0
 
-		return self.str + self.dex + 3*(extra_hp + warrior)
+        return self.str + self.dex + self.synergy_stats[:hp] + 2*extra_hp
 	end
 
 	def hp_rate
@@ -557,9 +639,8 @@ class Character < ActiveRecord::Base
 
 	def mp_max
 		extra_mp = self.has_skill?('Extra MP') ? self.skill('Extra MP').level : 0
-		lore = self.has_synergy?('Lore') ? self.synergies['Lore'][:level] : 0
 
-		return self.int + self.fai + 3*(extra_mp + lore)
+        return self.int + self.fai + self.synergy_stats[:mp] + 2*extra_mp
 	end
 
 	def mp_rate
@@ -594,6 +675,28 @@ class Character < ActiveRecord::Base
 		self.items.each { |item| speed_result += item.dex_mod if item.armour? }
 		return speed_result
 	end
+
+    def self.synergy_data
+        if @@synergy_data.nil?
+            @@synergy_data = {}
+            XML::Parser.file('app/data/synergies.xml').parse.root.find('Synergy').each do |synergy_xml|
+                
+                synergy = {hp: 0, mp: 0, wild: 0}
+                synergy[:name] = synergy_xml.find_first('Name').content
+                
+                synergy_xml.find_first('Bonus').children.each do |bonus_xml|
+                    case bonus_xml.name
+                        when 'HP' then synergy[:hp] = bonus_xml.content.to_i
+                        when 'MP' then synergy[:mp] = bonus_xml.content.to_i
+                        when 'Wild' then synergy[:wild] = bonus_xml.content.to_i
+                    end
+                end if synergy_xml.find_first('Bonus')
+                
+                @@synergy_data[synergy[:name]] = synergy
+            end
+        end
+        @@synergy_data
+    end
 
 	def pass_requirements?(requirements)
 		return true if requirements.nil?

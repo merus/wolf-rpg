@@ -88,6 +88,16 @@ class CharactersController < ApplicationController
 			redirect_to @character, flash: { error: "Failed to Change Stats" }
 		end
 	end
+    
+    def synergy_stats
+        @character = Character.find(params[:id])
+        
+        if @character.update_attribute(:synergy_hp, @character.synergy_stats[:hp_min] + params[:synergy_stats].to_i)
+            redirect_to @character, flash: { success: "Changed Synergy Bonuses" }
+        else
+            redirect_to @character, flash: { error: "Failed to Change Synergy Bonuses" }
+        end
+    end
 
 	def items
 		strong_params = strong_parameters
