@@ -18,8 +18,6 @@
 			<%= f.label :campaign_id, "Campaign" %>
 			<%= f.select(:campaign_id, current_user.campaign_select) %>
 
-            <%= f.hidden_field :synergy_hp, value: 0 %>
-
 			<div>
 				<%= f.submit "Create Character", class: "btn btn-large btn-primary" %>
 				<a class="btn btn-large btn-primary right" data-toggle="modal" href='#importModal'>Import Character</a>

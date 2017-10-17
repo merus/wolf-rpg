@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 20170907031057) do
     t.integer "user_id"
     t.integer "campaign_id"
     t.integer "privacy"
+    t.integer "synergy_hp"
   end
 
   create_table "equipment", id: :serial, force: :cascade do |t|

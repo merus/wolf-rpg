@@ -1446,11 +1446,7 @@
             <Action>Major</Action>
             <Mana>5,X</Mana>
             <Power type="roll"><skill>Swarm of Rats</skill></Power>
-<<<<<<< HEAD
             <Quick>Summon twice result level rats. Each rat has <HP>1</HP> and attacks for 2 damages ignoring shields.</Quick>
-=======
-            <Quick>Summon X rats. Each rat has 1 HP and attacks for 2 damages ignoring shields.</Quick>
->>>>>>> b6d1f2e32242c147e341c07b7076e1457d030373
         </Effect>
     </Skill>
     

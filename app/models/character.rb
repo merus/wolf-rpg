@@ -75,6 +75,7 @@ class Character < ActiveRecord::Base
 
 	after_create do
 		update_base_skills
+		synergy_stats
 		if self.race == 'Vampire'
 			self.add_ability 'Atheist'
 			self.add_ability 'Literate'

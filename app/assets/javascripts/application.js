@@ -94,7 +94,7 @@ function roll(amount, faces, keep)
 		amount -= 2;
 		faces += 2;
 	}
-	while (amount > 12)
+	while (faces > 12)
 	{
 		amount += 2;
 		faces -= 2;
@@ -115,17 +115,17 @@ function roll(amount, faces, keep)
 
 	if (result <= 0)
 		alert("Result: " + result + ' (Critical Failure: 0)');
-	else if (result <= 2)
+	else if (result <= 1)
 		alert("Result: " + result + ' (Failure: 1)');
-	else if (result <= 5)
+	else if (result <= 3)
 		alert("Result: " + result + ' (Basic Pass: 2)');
-	else if (result <= 10)
+	else if (result <= 6)
 		alert("Result: " + result + ' (Pass: 3)');
-	else if (result <= 17)
+	else if (result <= 10)
 		alert("Result: " + result + ' (Skillful Pass: 4)');
-	else if (result <= 26)
+	else if (result <= 15)
 		alert("Result: " + result + ' (Prodigious Pass: 5)');
-	else if (result <= 37)
+	else if (result <= 20)
 		alert("Result: " + result + ' (Epic Pass: 6)');
 	else
 		alert("Result: " + result + ' (Godlike Pass: 7)');
