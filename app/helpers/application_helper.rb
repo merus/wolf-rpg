@@ -4,42 +4,42 @@ require 'ostruct'
 
 module ApplicationHelper
 
-	def alert_icon(alert_type)
-		return "<i class='icon-exclamation-sign'></i> ".html_safe if alert_type == 'error'
-		return "<i class='icon-ok icon-white'></i> ".html_safe if alert_type == 'success'
-		return "<i class='icon-warning-sign'></i> ".html_safe
+	def alert_glyphicon(alert_type)
+		return "<span class='glyphicon glyphicon-exclamation-sign'></span> ".html_safe if alert_type == 'error'
+		return "<span class='glyphicon glyphicon-ok'></span> ".html_safe if alert_type == 'success'
+		return "<span class='glyphicon glyphicon-warning-sign'></span> ".html_safe
 	end
 
 	def delete
-		"<i class='icon-trash icon-white'></i> Delete".html_safe
+		"<span class='glyphicon-trash glyphicon'></span> Delete".html_safe
 	end
 
 	def modify
-		"<i class='icon-pencil icon-white'></i> Modify".html_safe
+		"<span class='glyphicon-pencil glyphicon'></span> Modify".html_safe
 	end
 
 	def export
-		"<i class='icon-download-alt icon-white'></i> Export".html_safe
+		"<span class='glyphicon-download-alt glyphicon'></span> Export".html_safe
 	end
 
 	def page(type)
-		"<i class='icon-book icon-white'></i> #{type} Page".html_safe
+		"<span class='glyphicon-book glyphicon'></span> #{type} Page".html_safe
 	end
 
 	def add(type)
-		"<i class='icon-plus icon-white'></i> Add #{type}".html_safe
+		"<span class='glyphicon-plus glyphicon'></span> Add #{type}".html_safe
 	end
 
 	def remove(type)
-		"<i class='icon-minus icon-white'></i> Remove #{type}".html_safe
+		"<span class='glyphicon-minus glyphicon'></span> Remove #{type}".html_safe
 	end
 
 	def change(type)
-		"<i class='icon-resize-vertical icon-white'></i> Change #{type}".html_safe
+		"<span class='glyphicon-resize-vertical glyphicon'></span> Change #{type}".html_safe
 	end
 
 	def save_changes
-		"<i class='icon-ok icon-white'></i> Save Changes".html_safe
+		"<span class='glyphicon-ok glyphicon'></span> Save Changes".html_safe
 	end
 
 	def full_title(page_title = nil)
