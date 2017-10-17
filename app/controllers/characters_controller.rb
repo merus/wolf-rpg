@@ -14,6 +14,7 @@ class CharactersController < ApplicationController
 		@character = current_user.characters.build(strong_parameters)
 		@character.privacy ||= :campaign if @character.in_campaign?
 		@character.privacy ||= :public
+		@character.synergy_hp = 0
 
 		if @character.save
 			current_user.push_active_character @character if signed_in?
