@@ -305,7 +305,8 @@
 	<tbody>
 		<% @character.skills.sort_by{ |skill| skill.name }.each do |skill| %>
 			<tr>
-				<%= content_tag :td, class: skill.synergy_css('name-'), rowspan: skill.effects.count do %>
+				<%= content_tag :td, id: skill.name.parameterize, class: skill.synergy_css('name-'), 
+									 rowspan: skill.effects.count do %>
 					<%= content_tag :span, skill.full_name, rel: 'popover', 'data-content' => popover_content(skill), 'data-original-title' => popover_title(skill), class: 'skill-popover left' %>
 					<% skill.icons.each do |icon| %>
 						<%= content_tag :a, class: 'icon-tooltip right', rel: 'tooltip', title: icon[:name], style: 'width:20px' do %>
