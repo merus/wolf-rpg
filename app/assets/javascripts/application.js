@@ -83,7 +83,6 @@ $(document).ready(function() {
 
 	recalculate_xp();
 
-	skill_levels_run = 0
 });
 
 function roll(amount, faces, keep)
@@ -425,7 +424,6 @@ function add_selected(skill_name)
 
 function show_skill_levels()
 {
-	skill_levels_run += 1
 	$('.skill-level').css('display', 'none');
 	$('.skill-level-select').css('display', 'block');
 	$('.power').css('color', '#ddd');

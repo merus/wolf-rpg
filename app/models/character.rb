@@ -316,27 +316,27 @@ class Character < ActiveRecord::Base
 	end
 
 	def primary
-		items.where(slot: 'Primary')
+		items.where(slot: 'Primary').first
 	end
 
 	def primary_equiped?
-		primary.count > 0
+		items.where(slot: 'Primary').count > 0
 	end
 
 	def off_hand
-		items.where(slot: 'Off Hand')
+		items.where(slot: 'Off Hand').first
 	end
 
 	def off_hand_equiped?
-		off_hand.count > 0
+		items.where(slot: 'Off Hand').count > 0
 	end
 
 	def armour
-		items.where(slot: 'Armour')
+		items.where(slot: 'Armour').first
 	end
 
 	def armour_equiped?
-		armour.count > 0
+		items.where(slot: 'Armour').count > 0
 	end
 
 	def unequip(slot)

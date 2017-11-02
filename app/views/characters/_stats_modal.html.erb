@@ -1,22 +1,26 @@
-<div id="statsModal" class="modal hide fade" style="display: none;">
-	<%= form_for(@character, url: { action: :stats }) do |f| %>
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">×</button>
-			<h3>Change Character Details</h3>
-		</div>
-		<div class="modal-body">
+<div id="statsModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<%= form_for(@character, url: { action: :stats }) do |f| %>
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+					<h3>Change Character Details</h3>
+				</div>
+				<div class="modal-body">
 
-			<%= label_tag :base_stats, 'Base Stats Type' %>
-			<%= select_tag :base_stats, options_for_select(@character.stats_options, @character.stats_selected) %>
+					<%= label_tag :base_stats, 'Base Stats Type' %>
+					<%= select_tag :base_stats, options_for_select(@character.stats_options, @character.stats_selected) %>
 
-			Base Stats Distribution:
-			<% @character.stats_options.each_with_index do |stat, index| %>
-				<%= select_tag :"raw_stats#{index}", options_for_select(@character.stats_options(index), @character.stats_selected(index)) %>
+					Base Stats Distribution:
+					<% @character.stats_options.each_with_index do |stat, index| %>
+						<%= select_tag :"raw_stats#{index}", options_for_select(@character.stats_options(index), @character.stats_selected(index)) %>
+					<% end %>
+				</div>
+				<div class="modal-footer">
+					<a href='#' class="btn" data-dismiss="modal">Cancel</a>
+					<%= f.submit "Change Stats", class: "btn btn-small btn-primary" %>
+				</div>
 			<% end %>
 		</div>
-		<div class="modal-footer">
-			<a href='#' class="btn" data-dismiss="modal">Cancel</a>
-			<%= f.submit "Change Stats", class: "btn btn-small btn-primary" %>
-		</div>
-	<% end %>
+	</div>
 </div>

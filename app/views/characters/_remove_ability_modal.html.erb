@@ -1,33 +1,32 @@
-<div id="removeAbilityModal" class="modal hide fade" style="display: none;">
-	<%= form_for(@character, url: { action: :abilities }) do |f| %>
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">×</button>
-			<h3>Remove Abilities</h3>
-		</div>
-		<div class="modal-body">
-
-			<div class="row">
-				<div class="span2">
-
-					<% @character.abilities.reject { |ability| %w[Atheist Literate].include? ability.name and @character.race == 'Vampire' }.each_with_index do |ability, index| %>
-
-						<%= content_tag :p, class: ability.synergy_css('name-') do %>
-							<%= check_box_tag ability.name_tag('remove'), 'ability to remove', false %>
-							<%= ability.name %>
-						<% end %>
-
-						<% if @character.abilities.count >= 3 && (index+1).modulo(@character.abilities.count/3).zero? %>
+<div id="removeAbilityModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<%= form_for(@character, url: { action: :abilities }) do |f| %>
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+					<h3>Remove Abilities</h3>
 				</div>
-				<div class="span2">
-						<% end %>
-					<% end %>
-				</div>
-			</div>
+				<div class="modal-body">
 
+					<div class="row">
+						<div class="col-xs-12">
+
+							<% @character.abilities.reject { |ability| %w[Atheist Literate].include? ability.name and @character.race == 'Vampire' }.each_with_index do |ability, index| %>
+
+								<%= content_tag :div, class: "checkbox-inline " + ability.synergy_css('name-'), style: "margin-left: 0px; width: 45%" do %>
+									<%= check_box_tag ability.name_tag('remove'), 'ability to remove', false %>
+									<%= ability.name %>
+								<% end %>
+							<% end %>
+						</div>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<a href='#' class="btn" data-dismiss="modal">Cancel</a>
+					<%= f.submit "Remove Abilities", class: "btn btn-small btn-primary" %>
+				</div>
+			<% end %>
 		</div>
-		<div class="modal-footer">
-			<a href='#' class="btn" data-dismiss="modal">Cancel</a>
-			<%= f.submit "Remove Abilities", class: "btn btn-small btn-primary" %>
-		</div>
-	<% end %>
+	</div>
 </div>

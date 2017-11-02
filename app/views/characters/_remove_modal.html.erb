@@ -1,34 +1,32 @@
-<div id="removeModal" class="modal hide fade" style="display: none;">
-	<%= form_for(@character, url: { action: :skills }) do |f| %>
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">×</button>
-			<h3>Remove Skills</h3>
-		</div>
-		<div class="modal-body">
-
-			<div class="row">
-				<div class="span2">
-
-					<% skills = @character.skills.reject { |skill| Skill.base_skills.include? skill.name } %>
-					<% skills.sort_by{ |skill| skill.name }.each_with_index do |skill, index| %>
-
-						<%= content_tag :p, class: skill.synergy_css('name-') do %>
-							<%= check_box_tag skill.name_tag('remove'), 'skill to remove', false, onChange: "remove_selected('#{skill.name}')" %>
-							<%= skill.name %>
-						<% end %>
-
-						<% if @character.skills.count >= 3 && (index+1).modulo(@character.skills.count/3).zero? %>
+<div id="removeModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<%= form_for(@character, url: { action: :skills }) do |f| %>
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+					<h3>Remove Skills</h3>
 				</div>
-				<div class="span2">
-						<% end %>
-					<% end %>
-				</div>
-			</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
 
+							<% skills = @character.skills.reject { |skill| Skill.base_skills.include? skill.name } %>
+							<% skills.sort_by{ |skill| skill.name }.each_with_index do |skill, index| %>
+
+								<%= content_tag :div, class: "checkbox-inline " + skill.synergy_css('name-'), style: "margin-left: 0px; width: 31%" do %>
+									<%= check_box_tag skill.name_tag('remove'), 'skill to remove', false, onChange: "remove_selected('#{skill.name}')" %>
+									<%= skill.name %>
+								<% end %>
+							<% end %>
+						</div>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<a href='#' class="btn" data-dismiss="modal">Cancel</a>
+					<%= f.submit "Remove Skills", class: "btn btn-small btn-primary" %>
+				</div>
+			<% end %>
 		</div>
-		<div class="modal-footer">
-			<a href='#' class="btn" data-dismiss="modal">Cancel</a>
-			<%= f.submit "Remove Skills", class: "btn btn-small btn-primary" %>
-		</div>
-	<% end %>
+	</div>
 </div>

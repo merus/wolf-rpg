@@ -1,33 +1,29 @@
-<div id="addAbilityModal" class="modal hide fade" style="display: none;">
-	<%= form_for(@character, url: { action: :abilities }) do |f| %>
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">×</button>
-			<h3>Add Abilities</h3>
-		</div>
-		<div class="modal-body">
-
-			<div class="row">
-				<div class="span2">
-
-					<% abilities = @character.can_add_abilities %>
-					<% abilities.each_with_index do |ability, index| %>
-						<%= content_tag :p, class: ability.synergy_css('name-') do %>
-							<%= check_box_tag ability.name_tag('add'), 'ability to add', false %>
-							<%= ability.name %>
-						<% end %>
-
-						<% if abilities.count >= 3 && (index+1).modulo(abilities.count/3).zero? %>
+<div id="addAbilityModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<%= form_for(@character, html: {class: "form-inline" }, url: { action: :abilities }) do |f| %>
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+					<h3>Add Abilities</h3>
 				</div>
-				<div class="span2">
-						<% end %>
-					<% end %>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<% abilities = @character.can_add_abilities %>
+							<% abilities.each_with_index do |ability, index| %>
+								<%= content_tag :div, class: "checkbox-inline " + ability.synergy_css('name-'), style: "margin-left: 0px; width: 45%"  do %>
+									<%= check_box_tag ability.name_tag('add'), 'ability to add', false %>
+									<%= ability.name %>
+								<% end %>
+							<% end %>
+						</div>
+					</div>
 				</div>
-			</div>
-
+				<div class="modal-footer">
+					<a href='#' class="btn" data-dismiss="modal">Cancel</a>
+					<%= f.submit "Add Abilities", class: "btn btn-small btn-primary" %>
+				</div>
+			<% end %>
 		</div>
-		<div class="modal-footer">
-			<a href='#' class="btn" data-dismiss="modal">Cancel</a>
-			<%= f.submit "Add Abilities", class: "btn btn-small btn-primary" %>
-		</div>
-	<% end %>
+	</div>
 </div>
