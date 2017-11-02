@@ -111,8 +111,6 @@ function roll(amount, faces, keep)
 		result += Math.floor(dice[i] / 4);
 	}
 
-	alert(dice.toString())
-
 	if (result <= 0)
 		alert("Result: " + result + ' (Critical Failure: 0)');
 	else if (result <= 1)

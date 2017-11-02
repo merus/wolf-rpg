@@ -1,7 +1,7 @@
 class CharactersController < ApplicationController
 	include ActionView::Helpers::TextHelper
 	# helper ApplicationHelper
-	before_action :find_character, only: [:show, :export, :edit, :update, :stats, :items, :skills, :abilities, :destroy]
+	before_action :find_character, only: [:show, :export, :edit, :update, :stats, :synergy_stats, :items, :skills, :abilities, :destroy]
 	before_action :signed_in_user, except: [:show, :index, :export]
 	before_action :visible_to_user, only: [:show, :export]
 	before_action :correct_user, except: [:show, :index, :export, :new, :create, :import]
@@ -79,8 +79,11 @@ class CharactersController < ApplicationController
 	end
 
 	def stats
-		#TODO: this seems exploitable
-		stats = @character.base_stats(params[:base_stats].to_i, params[:"raw_stats#{params[:base_stats]}"].to_i)
+		#TODO: this should be replaced by passing the stat block in and whitelisting it as a valid stat block
+
+		stats_params = params.permit(:base_stats, :raw_stats0, :raw_stats1, :raw_stats2, :raw_stats3)
+
+		stats = @character.base_stats(stats_params[:base_stats].to_i, stats_params[:"raw_stats#{stats_params[:base_stats]}"].to_i)
 		if @character.update_attributes(str: stats[0], dex: stats[1], int: stats[2], fai: stats[3])
 			@character.update_base_skills
 			redirect_to @character, flash: { success: "Changed Stats" }
@@ -91,9 +94,9 @@ class CharactersController < ApplicationController
 	end
     
     def synergy_stats
-        @character = Character.find(params[:id])
-        
-        if @character.update_attribute(:synergy_hp, @character.synergy_stats[:hp_min] + params[:synergy_stats].to_i)
+        synergy_param = params.require(:synergy_stats).to_i
+
+        if @character.update_attribute(:synergy_hp, @character.synergy_stats[:hp_min] + synergy_param)
             redirect_to @character, flash: { success: "Changed Synergy Bonuses" }
         else
             redirect_to @character, flash: { error: "Failed to Change Synergy Bonuses" }
@@ -101,10 +104,10 @@ class CharactersController < ApplicationController
     end
 
 	def items
-		strong_params = strong_parameters
+		items = params.permit(:armour, :off_hand, :primary)
 		#TODO: surely I should be checking whether this equipment is suitable
-		flash[:success] = "Changed Items to: Weapon:#{strong_params[:primary]}, Off:#{strong_params[:off_hand]}, Armour:#{params[:armour]}"
-		equiped = @character.equip(primary: params[:primary], off_hand: params[:off_hand], armour: params[:armour])
+		flash[:success] = "Changed Items to: Weapon:#{items[:primary]}, Off:#{items[:off_hand]}, Armour:#{items[:armour]}"
+		equiped = @character.equip(primary: items[:primary], off_hand: items[:off_hand], armour: items[:armour])
 		redirect_to @character, flash: { success: "Equiped: #{equiped.join(', ')}" }
 	end
 
@@ -122,7 +125,7 @@ class CharactersController < ApplicationController
 			end
 		end
 
-		ending_skills = @character.skills(true).collect { |skill| skill.name }
+		ending_skills = @character.skills.collect { |skill| skill.name }
 
 		added = ending_skills - starting_skills
 		removed = starting_skills - ending_skills
@@ -198,12 +201,12 @@ class CharactersController < ApplicationController
 	end
 
 	def visible_to_user
-		@character = Character.find(params[:id])
+		@character ||= Character.find(params[:id])
 		redirect_to characters_path, flash: { error: "Unable to access character" } unless visible? @character
 	end
 
 	def correct_user
-		@character = Character.find(params[:id])
+		@character ||= Character.find(params[:id])
 		redirect_to characters_path, flash: { error: "You do not own that Character" } unless current_user_owns? @character
 	end
 end
