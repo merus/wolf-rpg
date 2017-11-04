@@ -1,0 +1,30 @@
+<div class="dont-print modify">
+	<%= link_to page('Abilities'), '/rules#tab-abilities', class: "btn btn-primary disable-button" %>
+	<a class="btn btn-success disable-button" data-toggle="modal" href='#addAbilityModal'><%= add 'Abilities' %></a>
+	<% if @character.abilities.empty? %>
+		<a class='btn btn-danger' disabled='true'><%= remove('Abilities') %></a>
+	<% else %>
+		<a class="btn btn-danger disable-button" data-toggle="modal" href='#removeAbilityModal'><%= remove 'Abilities' %></a>
+	<% end %>
+</div>
+<p/>
+
+<table class='table table-striped table-bordered table-condensed'>
+	<col class='name-col'/>
+	<thead>
+		<tr>
+			<th>Ability Name</th>
+			<th>Effect</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @character.abilities.sort_by{ |ability| ability.name }.each do |ability| %>
+			<tr>
+				<%= content_tag :td, class: ability.synergy_css('name-') do %>
+					<%= content_tag :span, ability.name, rel: 'popover', 'data-content' => parse_text_xml(ability.text), 'data-original-title' => ability.name, class: 'skill-popover' %>
+				<% end %>
+				<td><%= parse_text_xml(ability.quick, type: :quick) %></td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
