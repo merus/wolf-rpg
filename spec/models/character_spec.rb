@@ -21,7 +21,8 @@ require 'spec_helper'
 describe Character do
 
 	before do
-		@char = Character.new(name: "Essin", player: "Anton", str: 12, dex: 12, int: 12, fai: 4)
+		@user = FactoryGirl.create(:user)
+		@char = Character.new(name: "Essin", user_id: @user.id, str: 12, dex: 12, int: 12, fai: 4)
 	end
 
 	subject { @char }

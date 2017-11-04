@@ -52,7 +52,7 @@ Rails.application.routes.draw do
   # Sign up/in/out pages
 
   get '/signup', to: 'users#new'
-  post '/signin', to: 'sessions#new'
+  get '/signin', to: 'sessions#new'
   delete '/signout', to: 'sessions#destroy'
 
   root to: 'static_pages#home'
