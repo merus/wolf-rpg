@@ -1,6 +1,6 @@
 <% provide(:title, 'Profile') %>
 
-<div class="hero-unit">
+<div class="jumbotron">
 	<h1><%= @user.handle %></h1>
 	<% unless @campaigns_to_invite.empty? %>
 		<div class="center">
@@ -63,7 +63,7 @@
 
 <% unless @characters.empty? %>
 	<h1>Characters</h1>
-	<div class='character-block clear'>
+	<div class="clear row">
 		<%= render @characters %>
 	</div>
 	<%= will_paginate @characters, param_name: 'character_page' %>

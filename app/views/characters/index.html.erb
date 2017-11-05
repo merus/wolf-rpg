@@ -10,7 +10,7 @@
 <% if signed_in? %>
 	<% unless @owned_characters.nil? or @owned_characters.empty? %>
 		<h1>Your Characters</h1>
-		<div class='character-block'>
+		<div class="row">
 			<%= render @owned_characters %>
 		</div>
 		<%= will_paginate @owned_characters, param_name: 'owned_page' %>
@@ -23,7 +23,7 @@
 			<% campaign = Campaign.find campaign_id %>
 			<%= content_tag(:h2, link_to(campaign.name, campaign), class: 'center') %>
 
-			<div class='character-block'>
+			<div class="row">
 				<%= render characters %>
 			</div>
 		<% end %>
@@ -34,7 +34,7 @@
 <% unless @other_characters.nil? or @other_characters.empty? %>
 	<h1>Public Characters</h1>
 
-	<div class='character-block'>
+	<div class="row">
 		<%= render @other_characters %>
 	</div>
 	<%= will_paginate @other_characters, param_name: 'other_page' %>
