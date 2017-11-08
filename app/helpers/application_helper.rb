@@ -64,15 +64,15 @@ module ApplicationHelper
 	end
 
 	def major_action
-		content_tag :span, "Major Action", class: 'label label-inverse'
+		content_tag :span, "Major Action", class: 'label label-default'
 	end
 
 	def minor_action
-		content_tag :span, "Minor Action", class: 'label label-inverse'
+		content_tag :span, "Minor Action", class: 'label label-default'
 	end
 
 	def move_action
-		content_tag :span, "Move Action", class: 'label label-inverse'
+		content_tag :span, "Move Action", class: 'label label-default'
 	end
 
 	def damage_reduction(amount=nil)
@@ -81,9 +81,9 @@ module ApplicationHelper
 	end
 
 	def hp(amount = nil)
-		return content_tag(:span, 'HP', class: 'label label-important') if amount.nil?
-		return content_tag(:span, 'HP Max', class: 'label label-important') if amount == 'max'
-		return content_tag(:span, "#{amount} HP", class: 'label label-important')
+		return content_tag(:span, 'HP', class: 'label label-danger') if amount.nil?
+		return content_tag(:span, 'HP Max', class: 'label label-danger') if amount == 'max'
+		return content_tag(:span, "#{amount} HP", class: 'label label-danger')
 	end
 
 	def mp(amount = nil)

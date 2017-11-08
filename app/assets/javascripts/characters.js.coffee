@@ -10,6 +10,10 @@ $(document).ready( () ->
 
 	$(".skill-table tr").hover( () ->
 		this_row = $( this )
+		this_class = this.className
+		if (this.className == "")
+			return
+			
 		this_prereqs = this_row.data("prereqs")
 		if (this_prereqs != "" and this_prereqs != undefined)
 			prereq_rows = this_prereqs.split(" ")

@@ -2,7 +2,7 @@
 
 <% is_admin = @campaign.has_admin? current_user %>
 
-<div class="hero-unit">
+<div class="jumbotron">
 	<h1><%= @campaign.name %></h1>
 	<div class="center"><h4 class="center">Privacy: <%= @campaign.is_public ? "Open" : "Closed" %></h4><p/></div>
 	<h3><%= @campaign.description %></h3>

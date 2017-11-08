@@ -11,7 +11,7 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
-//= require jquery_ujs
+//= require rails-ujs
 //= require bootstrap
 //= require_tree .
 
@@ -22,8 +22,10 @@ $(document).ready(function() {
 	synergy_classes = ["warrior", "rogue", "channeller", "mechanist", "trickster", "battle-mage", "necromancer", "lore", "no-synergy"]
 	stats_change();
 
-	var activeTab = $('[href=' + location.hash + ']');
-	activeTab && activeTab.tab('show');
+	if (location.hash !== "") {
+		var activeTab = $('[href=' + location.hash + ']');
+		activeTab && activeTab.tab('show');
+	}
 	
 	$('.add_ability').each(function () {
 		if ($(this).attr('id').indexOf("Follower") != -1)
@@ -85,6 +87,11 @@ $(document).ready(function() {
 
 });
 
+function reverse_sort(a, b)
+{
+	return b - a;
+}
+
 function roll(amount, faces, keep)
 {
 	var result = 0, result_type;
@@ -100,33 +107,34 @@ function roll(amount, faces, keep)
 	}
 
 	dice = []
-	for (var i = 0; i< amount; i++) {
+	for (var i = 0; i < amount; i++) {
 		dice[i] = Math.ceil(Math.random()*faces);
 	}
 
-	dice.sort((a, b) => (b - a));
+	dice.sort(reverse_sort);
 
 	for (var i = 0; (i < keep) && (i < amount); i++) {
 		result += Math.floor(dice[i] / 4);
 	}
-
+	
 	if (result <= 0)
-		alert("Result: " + result + ' (Critical Failure: 0)');
+		alert("Result: " + result + ' (Critical Failure: 0)\nDice: ' + dice.join(", "));
 	else if (result <= 1)
-		alert("Result: " + result + ' (Failure: 1)');
+		alert("Result: " + result + ' (Failure: 1)\nDice: ' + dice.join(", "));
 	else if (result <= 3)
-		alert("Result: " + result + ' (Basic Pass: 2)');
+		alert("Result: " + result + ' (Basic Pass: 2)\nDice: ' + dice.join(", "));
 	else if (result <= 6)
-		alert("Result: " + result + ' (Pass: 3)');
+		alert("Result: " + result + ' (Pass: 3)\nDice: ' + dice.join(", "));
 	else if (result <= 10)
-		alert("Result: " + result + ' (Skillful Pass: 4)');
+		alert("Result: " + result + ' (Skillful Pass: 4)\nDice: ' + dice.join(", "));
 	else if (result <= 15)
-		alert("Result: " + result + ' (Prodigious Pass: 5)');
+		alert("Result: " + result + ' (Prodigious Pass: 5)\nDice: ' + dice.join(", "));
 	else if (result <= 20)
-		alert("Result: " + result + ' (Epic Pass: 6)');
+		alert("Result: " + result + ' (Epic Pass: 6)\nDice: ' + dice.join(", "));
 	else
-		alert("Result: " + result + ' (Godlike Pass: 7)');
+		alert("Result: " + result + ' (Godlike Pass: 7)\nDice: ' + dice.join(", "));
 }
+
 
 function add(elem_id, amount)
 {
