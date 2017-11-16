@@ -1,6 +1,6 @@
 <%= form_for(@character, url: { action: :skills }, html: { id: 'form-skill-levels' } ) do |f| %>
 
-<div class="dont-print modify">
+<div class="dont-print modify form-inline">
 	<%= link_to page('Skills'), '/rules#tab-skills', class: "btn btn-primary disable-button" %>
 	<a class="btn btn-success disable-button" data-toggle="modal" href='#addModal'><%= add('Skills') %></a>
 	<% if @character.skills.count == 4 # only base skills %>
@@ -9,7 +9,17 @@
 		<a class="btn btn-danger disable-button" data-toggle="modal" href='#removeModal'><%= remove('Skills') %></a>
 	<% end %>
 	<!-- <a class='btn btn-warning skill-level-select' onClick='submit_via_jquery()'><i class='icon-ok icon-white'></i> Save Changes</a> -->
-	<a class="btn btn-warning" onClick="show_skill_levels()" id='skill-levels'><%= change('Skill Levels') %></a>
+	<a class="btn btn-warning" onClick="show_skill_levels()" id='skill-levels'><%= change('Skill Levels') %></a>	
+	<div class="form-group">
+		<label for="custom-roll-dice">Roll</label>
+		<input type="text" class="form-control small-number" id="custom-roll-dice" placeholder="e.g. 3">
+	</div>
+	<%= select_tag "custom-roll-size".to_sym, options_for_select([["d4", 4], ["d6", 6], ["d8", 8], ["d10", 10], ["d12", 12]]), class: "form-control" %>
+	<div class="form-group">
+		<label for="custom-roll-keep">, keeping</label>
+		<input type="text" class="form-control small-number" id="custom-roll-keep" placeholder="e.g. 5">
+	</div>
+	<a id="custom-roll" class="btn btn-info">Roll!</a>
 </div>
 <p/>
 
