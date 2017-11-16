@@ -1,14 +1,14 @@
 <%= content_tag :div, class: skill.synergy_css('skill-') do %>
 	<div class='row'>
 		<div class='span2'>
-			<%= tag(:img, src:'/assets/attack.png', alt:'Attack') if skill.attack? %>
-			<%= tag(:img, src:'/assets/defend.png', alt:'Defend') if skill.defend? %>
-			<%= tag(:img, src:'/assets/invertible.png', alt:'Invertible') if skill.invertible? %>
-			<%= tag(:img, src:'/assets/divisible.png', alt:'Divisible') if skill.divisible? %>
-			<%= tag(:img, src:'/assets/str.png', alt:'Strength') if skill.stat == 'Str' %>
-			<%= tag(:img, src:'/assets/dex.png', alt:'Dexterity') if skill.stat == 'Dex' %>
-			<%= tag(:img, src:'/assets/int.png', alt:'Intelligence') if skill.stat == 'Int' %>
-			<%= tag(:img, src:'/assets/fai.png', alt:'Faith') if skill.stat == 'Fai' %>
+			<%= image_tag('attack.png', alt:'Attack') if skill.attack? %>
+			<%= image_tag('defend.png', alt:'Defend') if skill.defend? %>
+			<%= image_tag('invertible.png', alt:'Invertible') if skill.invertible? %>
+			<%= image_tag('divisible.png', alt:'Divisible') if skill.divisible? %>
+			<%= image_tag('str.png', alt:'Strength') if skill.stat == 'Str' %>
+			<%= image_tag('dex.png', alt:'Dexterity') if skill.stat == 'Dex' %>
+			<%= image_tag('int.png', alt:'Intelligence') if skill.stat == 'Int' %>
+			<%= image_tag('fai.png', alt:'Faith') if skill.stat == 'Fai' %>
 			<br/>
 		</div>
 		<div class='span5 center'>
@@ -16,12 +16,12 @@
 			<%= content_tag(:p, "Requires: #{skill skill.required_skill}".html_safe) if skill.required_skill %>
 		</div>
 		<div class="" style="float:right">
-			<%= tag(:img, src:'/assets/arthur.png', alt:'Arthur') if skill.spell == 'Arthur' %>
-			<%= tag(:img, src:'/assets/innodi.png', alt:'Innodi') if skill.spell == 'Innodi' %>
-			<%= tag(:img, src:'/assets/irdken.png', alt:"Ird'ken" ) if skill.spell == "Ird'ken" %>
-			<%= tag(:img, src:'/assets/oxdoro.png', alt:'Oxdoro') if skill.spell == 'Oxdoro' %>
-			<%= tag(:img, src:'/assets/loreanna.png', alt:'Loreanna') if skill.spell == 'Loreanna' %>
-			<%= tag(:img, src:'/assets/travaer.png', alt:'Travaer') if skill.spell == 'Travaer' %>
+			<%= image_tag('arthur.png', alt:'Arthur') if skill.spell == 'Arthur' %>
+			<%= image_tag('innodi.png', alt:'Innodi') if skill.spell == 'Innodi' %>
+			<%= image_tag('irdken.png', alt:"Ird'ken" ) if skill.spell == "Ird'ken" %>
+			<%= image_tag('oxdoro.png', alt:'Oxdoro') if skill.spell == 'Oxdoro' %>
+			<%= image_tag('loreanna.png', alt:'Loreanna') if skill.spell == 'Loreanna' %>
+			<%= image_tag('travaer.png', alt:'Travaer') if skill.spell == 'Travaer' %>
 		</div>
 	</div>
 

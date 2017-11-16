@@ -93,7 +93,7 @@ module ApplicationHelper
 	end
 
 	def skill(skill_name)
-		return content_tag :span, skill_name, class: 'label'
+		return content_tag :span, skill_name, class: 'label label-default'
 	end
 
 	def rate(value)
@@ -206,11 +206,11 @@ module ApplicationHelper
 
 	def popover_title(skill)
 		case skill.spell
-		when 'Arthur' then "<span class='popover-title'>#{skill.full_name}</span> #{tag :img, src: '/assets/arthur.png', class: 'popover-spell'}"
-		when 'Innodi' then "<span class='popover-title'>#{skill.full_name}</span> #{tag :img, src: '/assets/innodi.png', class: 'popover-spell'}"
-		when "Ird'ken" then "<span class='popover-title'>#{skill.full_name}</span> #{tag :img, src: '/assets/irdken.png', class: 'popover-spell'}"
-		when 'Oxdoro' then "<span class='popover-title'>#{skill.full_name}</span> #{tag :img, src: '/assets/oxdoro.png', class: 'popover-spell'}"
-		when 'Loreanna' then "<span class='popover-title'>#{skill.full_name}</span> #{tag :img, src: '/assets/loreanna.png', class: 'popover-spell'}"
+		when 'Arthur' then "<span class='popover-title'>#{skill.full_name}</span> #{image_tag 'arthur.png', class: 'popover-spell'}"
+		when 'Innodi' then "<span class='popover-title'>#{skill.full_name}</span> #{image_tag 'innodi.png', class: 'popover-spell'}"
+		when "Ird'ken" then "<span class='popover-title'>#{skill.full_name}</span> #{image_tag 'irdken.png', class: 'popover-spell'}"
+		when 'Oxdoro' then "<span class='popover-title'>#{skill.full_name}</span> #{image_tag 'oxdoro.png', class: 'popover-spell'}"
+		when 'Loreanna' then "<span class='popover-title'>#{skill.full_name}</span> #{image_tag 'loreanna.png', class: 'popover-spell'}"
 		else skill.name
 		end
 	end

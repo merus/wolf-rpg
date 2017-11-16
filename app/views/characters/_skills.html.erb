@@ -39,7 +39,7 @@
 					<%= content_tag :span, skill.full_name, rel: 'popover', 'data-content' => popover_content(skill), 'data-original-title' => popover_title(skill), class: 'skill-popover left' %>
 					<% skill.icons.each do |icon| %>
 						<%= content_tag :a, class: 'icon-tooltip right', rel: 'tooltip', title: icon[:name], style: 'width:20px' do %>
-							<%= tag :img, src: icon[:image], class: 'skill-icon' %>
+							<%= image_tag icon[:image], class: 'skill-icon' %>
 						<% end %>
 					<% end %>
 				<% end %>

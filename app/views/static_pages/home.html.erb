@@ -5,7 +5,7 @@
 		This is the home page for Anton's Wolf Role Playing System.
 	</h2>
 
-	<p><img src="assets/logo.png" alt="Wolf Logo"/></p>
+	<p><%= image_tag("logo.png", alt: "Wolf Logo") %></p>
 
 	<%= link_to "Create Account Now", signup_path, class:"btn btn-large btn-primary" unless signed_in? %>
 

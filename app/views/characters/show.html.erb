@@ -119,25 +119,25 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>Strength<img src="/assets/str.png" class="small-right"/></td>
+						<td>Strength<%= image_tag "str.png", class: "small-right" %></td>
 						<td><%= @character.str %></td>
 						<td><%= @character.str_mod < 0 ? @character.str_mod : "+#{@character.str_mod}" %></td>
 						<td><%= @character.str_final %></td>
 					</tr>
 					<tr>
-						<td>Dexterity<img src="/assets/dex.png" class="small-right"/></td>
+						<td>Dexterity<%= image_tag "dex.png", class: "small-right" %></td>
 						<td><%= @character.dex %></td>
 						<td><%= @character.dex_mod < 0 ? @character.dex_mod : "+#{@character.dex_mod}" %></td>
 						<td><%= @character.dex_final %></td>
 					</tr>
 					<tr>
-						<td>Intelligence<img src="/assets/int.png" class="small-right"/></td>
+						<td>Intelligence<%= image_tag "int.png", class: "small-right" %></td>
 						<td><%= @character.int %></td>
 						<td><%= @character.int_mod < 0 ? @character.int_mod : "+#{@character.int_mod}" %></td>
 						<td><%= @character.int_final %></td>
 					</tr>
 					<tr>
-						<td>Faith<img src="/assets/fai.png" class="small-right"/></td>
+						<td>Faith<%= image_tag "fai.png", class: "small-right" %></td>
 						<td><%= @character.fai %></td>
 						<td><%= @character.fai_mod < 0 ? @character.fai_mod : "+#{@character.fai_mod}" %></td>
 						<td><%= @character.fai_final %></td>

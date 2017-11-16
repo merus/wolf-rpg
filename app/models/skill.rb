@@ -214,17 +214,17 @@ class Skill < ActiveRecord::Base
 		icon_list = []
 
 		case self.class.raw_data[self.name][:stat]
-		when 'Str' then icon_list << { name: 'Strength', image: '/assets/str.png' }
-		when 'Dex' then icon_list << { name: 'Dexterity', image: '/assets/dex.png' }
-		when 'Int' then icon_list << { name: 'Intelligence', image: '/assets/int.png' }
-		when 'Fai' then icon_list << { name: 'Faith', image: '/assets/fai.png' }
+		when 'Str' then icon_list << { name: 'Strength', image: 'str.png' }
+		when 'Dex' then icon_list << { name: 'Dexterity', image: 'dex.png' }
+		when 'Int' then icon_list << { name: 'Intelligence', image: 'int.png' }
+		when 'Fai' then icon_list << { name: 'Faith', image: 'fai.png' }
 		end
 
-		icon_list << { name: 'Divisible', image: '/assets/divisible.png' } if self.divisible?
-		icon_list << { name: 'Invertible', image: '/assets/invertible.png' } if self.invertible?
-		icon_list << { name: 'Defensive', image: '/assets/defend.png' } if self.defend?
-		icon_list << { name: 'Melee Attack', image: '/assets/attack.png' } if self.melee?
-		icon_list << { name: 'Ranged Attack', image: '/assets/ranged.png' } if self.ranged?
+		icon_list << { name: 'Divisible', image: 'divisible.png' } if self.divisible?
+		icon_list << { name: 'Invertible', image: 'invertible.png' } if self.invertible?
+		icon_list << { name: 'Defensive', image: 'defend.png' } if self.defend?
+		icon_list << { name: 'Melee Attack', image: 'attack.png' } if self.melee?
+		icon_list << { name: 'Ranged Attack', image: 'ranged.png' } if self.ranged?
 
 		return icon_list
 	end

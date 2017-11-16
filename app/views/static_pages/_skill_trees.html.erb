@@ -16,8 +16,8 @@
 				<% skill = Skill.raw_data[skill_name] || Skill.statless %>
 				<%= content_tag :td, class: (base_skill == skill ? '' : 'synergy-row'), rowspan: Skill.required_size(skill_name) do %>
 					<%= content_tag :div, class: "synergy span2 #{skill[:synergy_css]}", style: 'margin-bottom:0px;' do %>
-						<%= tag(:img, src: 'assets/attack.png', class: 'small-left') if skill[:attack] %>
-						<%= tag(:img, src: 'assets/defend.png', class: 'small-left') if skill[:defend] %>
+						<%= image_tag( 'attack.png', class: 'small-left') if skill[:attack] %>
+						<%= image_tag( 'defend.png', class: 'small-left') if skill[:defend] %>
 
 						<% if (skill[:name].length > 11 and skill[:spell] and skill[:attack]) or skill[:name].length > 14 %>
 							<%= content_tag :span, skill[:name], style: 'font-size:85%;' %>
@@ -25,12 +25,12 @@
 							<%= skill[:name] %>
 						<% end %>
 
-						<%= tag(:img, src: 'assets/arthur.png', class: 'small-right') if skill[:spell] == 'Arthur' %>
-						<%= tag(:img, src: 'assets/innodi.png', class: 'small-right') if skill[:spell] == 'Innodi' %>
-						<%= tag(:img, src: 'assets/irdken.png', class: 'small-right') if skill[:spell] == "Ird'ken" %>
-						<%= tag(:img, src: 'assets/oxdoro.png', class: 'small-right') if skill[:spell] == 'Oxdoro' %>
-						<%= tag(:img, src: 'assets/loreanna.png', class: 'small-right') if skill[:spell] == 'Loreanna' %>
-						<%= tag(:img, src: 'assets/travaer.png', class: 'small-right') if skill[:spell] == 'Travaer' %>
+						<%= image_tag( 'arthur.png', class: 'small-right') if skill[:spell] == 'Arthur' %>
+						<%= image_tag( 'innodi.png', class: 'small-right') if skill[:spell] == 'Innodi' %>
+						<%= image_tag( 'irdken.png', class: 'small-right') if skill[:spell] == "Ird'ken" %>
+						<%= image_tag( 'oxdoro.png', class: 'small-right') if skill[:spell] == 'Oxdoro' %>
+						<%= image_tag( 'loreanna.png', class: 'small-right') if skill[:spell] == 'Loreanna' %>
+						<%= image_tag( 'travaer.png', class: 'small-right') if skill[:spell] == 'Travaer' %>
 					<% end %>
 				<% end %>
 				<%= content_tag(:td, tag(:hr), rowspan: Skill.required_size(skill[:name])) unless Skill.required_by(skill[:name]).empty? %>
