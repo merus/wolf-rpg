@@ -1,5 +1,9 @@
 module CharactersHelper
 
+	def show_roller
+		"<span class='glyphicon glyphicon-collapse-down'></span> Show Roller".html_safe
+	end
+
 	def skill_id(skill)
 		"skill-table-#{skill.name.parameterize}"
 	end
