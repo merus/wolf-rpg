@@ -57,9 +57,9 @@ class Character < ActiveRecord::Base
     KEEP_DICE_BASE = 3
     
     # Bonuses for following gods
-    SKILL_BONUS_FOR_FOLLOWING_OTHERS = 1
+    SKILL_BONUS_FOR_FOLLOWING_OTHERS = 2
     SKILL_BONUS_FOR_FOLLOWING_TRAVAER = 1
-    SKILL_PENALTY_FOR_FOLLOWING_GODS = 0 # Can be -1 ...
+    SKILL_PENALTY_FOR_FOLLOWING_GODS = -1 # Can be -1 ...
 
 	validates :name, presence: true, length: { maximum: 100 }
 	validates :race, presence: true, inclusion: BASE_STATS.keys
@@ -519,7 +519,9 @@ class Character < ActiveRecord::Base
 			if god == "Travaer"
 				total += (skill.invertible?) ? SKILL_BONUS_FOR_FOLLOWING_TRAVAER : SKILL_PENALTY_FOR_FOLLOWING_GODS
 			else
-				total += (skill.spell == god) ? SKILL_BONUS_FOR_FOLLOWING_OTHERS : SKILL_PENALTY_FOR_FOLLOWING_GODS
+				if (skill.spell.present?) then
+					total += (skill.spell == god) ? SKILL_BONUS_FOR_FOLLOWING_OTHERS : SKILL_PENALTY_FOR_FOLLOWING_GODS
+				end
 			end
 		end
 		total += self.weapon_bonus if effect_xml.attributes['weapon']
