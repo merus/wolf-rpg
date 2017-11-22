@@ -40,9 +40,10 @@ class UsersController < ApplicationController
 	end
 
 	def password
-		if @user and @user.authenticate(params[:user][:old_password])
-			@user.password = params[:user][:new_password]
-			@user.password_confirmation = params[:user][:new_password_confirmation]
+		clean_params = strong_parameters
+		if @user and @user.authenticate(clean_params[:old_password])
+			@user.password = clean_params[:new_password]
+			@user.password_confirmation = clean_params[:new_password_confirmation]
 			if @user.save
 				redirect_to @user, flash: { success: "Password Changed" }
 			else
@@ -57,11 +58,12 @@ class UsersController < ApplicationController
 	end
 
 	def update
-		if @user and @user.authenticate(params[:user][:password])
+		clean_params = strong_parameters
+		if @user and @user.authenticate(clean_params[:password])
 			# change user details
-			params[:user][:password_confirmation] = params[:user][:password]
+			clean_params[:password_confirmation] = new_params[:password]
 
-			if @user.update_attributes(strong_parameters)
+			if @user.update_attributes(clean_params)
 				redirect_to @user, flash: { success: "Updated Details" }
 			else
 				flash.now[:error] = "Error: #{@user.errors.full_messages.join(', ')}"
@@ -80,7 +82,8 @@ class UsersController < ApplicationController
 	end
 
 	def strong_parameters
-		params.require(:user).permit(:email, :handle, :name, :password, :password_confirmation)
+		params.require(:user).permit(:email, :handle, :name, :old_password, :new_password, :new_password_confirmation, 
+			:password, :password_confirmation)
 	end
 
 	def signed_in_user

@@ -5,19 +5,12 @@
 <h1>Change Account Settings</h1>
 
 <div class="row">
-	<div class="span6 offset3">
-		<%= form_for(@user) do |f| %>
+	<div class="col-xs-12 col-md-6 col-md-offset-3">
+		<%= bootstrap_form_for(@user) do |f| %>
 
-			<%= f.label :email, "Email" %>
 			<%= f.text_field :email %>
-
-			<%= f.label :handle, "User Name" %>
-			<%= f.text_field :handle %>
-
-			<%= f.label :name, "Real Name" %>
-			<%= f.text_field :name %>
-
-			<%= f.label :password, "Password" %>
+			<%= f.text_field :handle, label: "User Name" %>
+			<%= f.text_field :name, label: "Real Name" %>
 			<%= f.password_field :password %>
 
 			<div>

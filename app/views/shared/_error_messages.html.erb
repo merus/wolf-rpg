@@ -1,6 +1,6 @@
 <% if @character.errors.any?  %>
 	<div id="form_error_explanation" class="dont-print">
-		<div class="alert alert-error">
+		<div class="alert alert-danger">
 			The form contains <%= pluralize(@character.errors.count, "error") %>.
 		</div>
 		<ul class="dont-print" id="form_error_explanation">
@@ -13,7 +13,7 @@
 
 <% if @character.error_messages.any?  %>
 	<div id="error_explanation" class="dont-print">
-		<div class="alert alert-error">
+		<div class="alert alert-danger">
 			<i class='glyphicon-exclamation-sign'></i>
 			The character contains <%= pluralize(@character.error_messages.count, "error") %>.
 		</div>

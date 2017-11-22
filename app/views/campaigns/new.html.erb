@@ -3,26 +3,12 @@
 <h1>Create New Campaign</h1>
 
 <div class="row">
-	<div class="span6 offset3">
-		<%= form_for(@campaign) do |f| %>
-			<% if @campaign.errors.any?  %>
-				<div id="form_error_explanation" class="dont-print">
-					<div class="alert alert-error">
-						The form contains <%= pluralize(@campaign.errors.count, "error") %>.
-					</div>
-					<ul class="dont-print" id="form_error_explanation">
-						<% @campaign.errors.full_messages.each do |msg| %>
-							<li>* <%= msg %></li>
-						<% end %>
-					</ul>
-				</div>
-			<% end %>
-
-			<%= f.label :name %>
+	<div class="col-xs-12 col-md-6 col-md-offset-3">
+		<%= bootstrap_form_for(@campaign) do |f| %>
+			
 			<%= f.text_field :name %>
-
-			<%= f.label :description %>
 			<%= f.text_area :description, rows: 5 %>
+			<%= f.check_box :is_public, label: "Public Campaign" %>
 
 			<%= f.submit "Create Campaign", class: "btn btn-large btn-primary" %>
 
