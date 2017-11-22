@@ -10,6 +10,7 @@ gem 'jquery-rails'
 gem 'libxml-ruby'
 gem 'will_paginate'
 gem 'bootstrap-will_paginate'
+gem 'bootstrap_form'
 
 group :development, :test do
 	gem 'rspec-rails'

@@ -1,23 +1,16 @@
 <div id="nameModal" class="modal fade">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<%= form_for @character do |f| %>
+			<%= bootstrap_form_for @character do |f| %>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">×</button>
 					<h3>Change Character Details</h3>
 				</div>
 				<div class="modal-body">
 
-					<%= f.label :name %>
-					<%= f.text_field :name %>
-
-					<%= f.label :race %>
+					<%= f.text_field :name%>
 					<%= f.select(:race, %w[Wolf Dwarf Goblin Vampire], selected: @character.race) %>
-
-					<%= f.label :campaign_id, "Campaign" %>
-					<%= f.select :campaign_id, current_user.campaign_select, selected: @character.campaign_id %>
-
-					<%= f.label :privacy %>
+					<%= f.select :campaign_id, current_user.campaign_select, selected: @character.campaign_id, label: "Campaign" %>
 					<%= f.select(:privacy, [['Public', :public], ['Campaign', :campaign], ['Private', :private]], selected: @character.privacy) %>
 
 				</div>
