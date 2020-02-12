@@ -4,7 +4,7 @@ ruby '2.4.1'
 gem 'rails', '5.1.3'
 gem 'pg', '0.21.0'
 
-gem 'bootstrap-sass', '~>3.3'
+gem 'bootstrap-sass', '~>3.4'
 gem 'bcrypt'
 gem 'jquery-rails'
 gem 'libxml-ruby'
